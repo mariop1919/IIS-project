@@ -9,8 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Presentation extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'description', 'speaker', 'photo', 'logo', 'start_time', 'end_time', 'conference_id', 'room_id'];
+    protected $fillable = ['title', 'description', 'photo', 'logo', 'start_time', 'end_time', 'conference_id', 'room_id', 'user_id'];
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+    
     public function conference(): BelongsTo
     {
         return $this->belongsTo(Conference::class);

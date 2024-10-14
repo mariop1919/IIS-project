@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ConferenceRoom extends Model
 {
@@ -15,12 +16,12 @@ class ConferenceRoom extends Model
         'start_time',
         'end_time',
     ];
-    public function conference()
+    public function conference() : BelongsTo
     {
         return $this->belongsTo(Conference::class);
     }
 
-    public function room()
+    public function room() : BelongsTo
     {
         return $this->belongsTo(Room::class);
     }

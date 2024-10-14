@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -30,7 +31,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
+        'remember_token',        
     ];
 
     /**
@@ -44,5 +45,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function presentations() : HasMany
+    {
+        return $this->hasMany(Presentation::class);
+    }
+
+    public function conferences() : HasMany
+    {
+        return $this->hasMany(Conference::class);
+    }
+
+    public function reservations() : HasMany
+    {
+        return $this->hasMany(Reservation::class);
     }
 }
