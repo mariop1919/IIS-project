@@ -15,7 +15,7 @@ class RoomSeeder extends Seeder
         Room::factory()->create([
             'name' => 'Main hall',
             'capacity' => 100,
-            'conference_id' => 1,
+            'equipment' => 1,
         ]);
         Room::factory()->count(9)->create();
     }
