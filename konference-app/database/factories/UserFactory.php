@@ -29,16 +29,49 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'role' => 'unregistered_user',
         ];
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Indicate that the user is an admin.
+     *
+     * @return $this
      */
-    public function unverified(): static
+    public function admin(): self
     {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
+        return $this->state(function (array $attributes) {
+            return [
+                'role' => 'admin',
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the user is a registred user.
+     *
+     * @return $this
+     */
+    public function registred_user(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role' => 'registred_user',
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the user is an unregistred user.
+     *
+     * @return $this
+     */
+    public function unregistred_user(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role' => 'unregistred_user',
+            ];
+        });
     }
 }
