@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
-
+use App\Models\Conference;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Reservation>
  */
@@ -23,6 +23,7 @@ class ReservationFactory extends Factory
             'phone' => $this->faker->phoneNumber(),
             'is_paid' => $this->faker->boolean(),
             'user_id' => User::factory(),
+            'conference_id' => Conference::factory()
         ];
     }
 }

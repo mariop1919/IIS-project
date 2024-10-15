@@ -17,9 +17,14 @@ class RoomFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'capacity' => $this->faker->numberBetween(1, 100),
-            'location' => $this->faker->address(),
+            'name' => $this->faker->word(),  // A single word as room name
+            'capacity' => $this->faker->numberBetween(1, 100),  // Room capacity
+            'equipment' => implode(', ', $this->faker->randomElements([  // Randomly selected equipment
+                'Projector',
+                'Speakers',
+                'Whiteboard',
+                'Laptop'
+            ], $count = rand(1, 2))),  // Select 1 to 4 random items
         ];
     }
 }
