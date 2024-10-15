@@ -15,10 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('genre');
             $table->string('location');
-            $table->date('start_date');
-            $table->date('end_date');
             $table->decimal('price', 8, 2);
             $table->integer('capacity');
             $table->timestamps();
