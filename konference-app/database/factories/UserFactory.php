@@ -30,6 +30,7 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'role' => 'unregistered_user',
+            'is_registered' => false,
         ];
     }
 
@@ -48,29 +49,43 @@ class UserFactory extends Factory
     }
 
     /**
-     * Indicate that the user is a registred user.
+     * Indicate that the user is an organizer.
      *
      * @return $this
      */
-    public function registred_user(): self
+    public function organizer(): self
     {
         return $this->state(function (array $attributes) {
             return [
-                'role' => 'registred_user',
+                'role' => 'organizer',
             ];
         });
     }
 
     /**
-     * Indicate that the user is an unregistred user.
+     * Indicate that the user is a speaker.
      *
      * @return $this
      */
-    public function unregistred_user(): self
+    public function speaker(): self
     {
         return $this->state(function (array $attributes) {
             return [
-                'role' => 'unregistred_user',
+                'role' => 'speaker',
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the user is a guest.
+     *
+     * @return $this
+     */
+    public function guest(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role' => 'guest',
             ];
         });
     }
