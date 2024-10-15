@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Conference>
@@ -22,6 +23,7 @@ class ConferenceFactory extends Factory
             'location' => $this->faker->address(),
             'capacity' => $this->faker->numberBetween(1, 100),
             'price' => $this->faker->randomFloat(2, 0, 100000),
+            'user_id' => User::factory(),
         ];
     }
 }
