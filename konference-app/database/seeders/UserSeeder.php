@@ -20,6 +20,5 @@ class UserSeeder extends Seeder
             'remember_token' => 'specificToken',
             'is_registered' => 1,
         ]);
-        User::factory()->count(9)->create();
     }
 }

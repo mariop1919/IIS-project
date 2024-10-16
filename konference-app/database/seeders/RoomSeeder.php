@@ -17,6 +17,5 @@ class RoomSeeder extends Seeder
             'capacity' => 100,
             'equipment' => 'Projector',
         ]);
-        Room::factory()->count(9)->create();
     }
 }

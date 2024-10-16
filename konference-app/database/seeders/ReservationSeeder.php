@@ -20,6 +20,5 @@ class ReservationSeeder extends Seeder
             'is_paid' => 1,
             'user_id' => 1,
         ]);
-        Reservation::factory()->count(9)->create();
     }
 }

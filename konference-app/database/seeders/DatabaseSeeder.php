@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             ConferenceSeeder::class,
             ReservationSeeder::class,
             PresentationSeeder::class,
+            ConferenceRoomSeeder::class,
         ]);
     }
 }

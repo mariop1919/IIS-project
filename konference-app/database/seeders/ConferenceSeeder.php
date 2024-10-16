@@ -21,7 +21,6 @@ class ConferenceSeeder extends Seeder
             'user_id' => 1,
         ]);
 
-        Conference::factory()->count(9)->create();
 
     }
 }
