@@ -22,8 +22,8 @@ class ReservationFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->phoneNumber(),
             'is_paid' => $this->faker->boolean(),
-            'user_id' => User::factory(),
-            'conference_id' => Conference::factory()
+            'user_id' => User::inRandomOrder()->first()->id ?? User::factory(),
+            'conference_id' => Conference::inRandomOrder()->first()->id ?? Conference::factory(),
         ];
     }
 }

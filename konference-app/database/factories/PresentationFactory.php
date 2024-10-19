@@ -26,9 +26,9 @@ class PresentationFactory extends Factory
             'logo' => $this->faker->imageUrl(),
             'start_time' => $this->faker->dateTime(),
             'end_time' => $this->faker->dateTime(),
-            'conference_id' => Conference::factory(),
-            'room_id' => Room::factory(),
-            'user_id' => User::factory(),
+            'conference_id' => Conference::inRandomOrder()->first()->id ?? Conference::factory(),
+            'room_id' => Room::inRandomOrder()->first()->id ?? Room::factory(),
+            'user_id' => User::inRandomOrder()->first()->id ?? User::factory(),
         ];
     }
 }

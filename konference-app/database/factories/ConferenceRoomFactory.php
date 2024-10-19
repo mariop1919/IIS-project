@@ -19,8 +19,8 @@ class ConferenceRoomFactory extends Factory
     public function definition(): array
     {
         return [
-            'conference_id' => Conference::factory(), 
-            'room_id' => Room::factory(),             
+            'conference_id' => Conference::inRandomOrder()->first()->id ?? Conference::factory(),
+            'room_id' => Room::inRandomOrder()->first()->id ?? Room::factory(),
             'start_time' => $this->faker->dateTime(),
             'end_time' => $this->faker->dateTime(),
         ];
