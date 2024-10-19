@@ -10,6 +10,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            DeleteSeedsSeeder::class,
+        ]);
+
+        $this->call([
             UserSeeder::class,
             RoomSeeder::class,
             ConferenceSeeder::class,

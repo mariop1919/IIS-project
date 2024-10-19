@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\ConferenceRoom;
+use Database\Factories\ConferenceRoomFactory;
 
 class ConferenceRoomSeeder extends Seeder
 {
@@ -19,5 +20,6 @@ class ConferenceRoomSeeder extends Seeder
             'start_time' => '2024-11-01 09:00:00',  
             'end_time' => '2024-11-01 11:00:00', 
         ]);
+        ConferenceRoom::factory()->count(4)->create();
     }
 }

@@ -22,5 +22,6 @@ class ConferenceSeeder extends Seeder
         ]);
 
 
+        Conference::factory()->count(4)->create();
     }
 }
