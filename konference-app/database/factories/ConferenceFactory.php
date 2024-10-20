@@ -23,7 +23,16 @@ class ConferenceFactory extends Factory
             'location' => $this->faker->address(),
             'capacity' => $this->faker->numberBetween(1, 100),
             'price' => $this->faker->randomFloat(2, 0, 100000),
-            'user_id' => User::inRandomOrder()->first()->id ?? User::factory(), // Random user or create new
+            'user_id' => User::factory(),
         ];
+    }
+
+    public function usingExistingUser()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'user_id' => User::inRandomOrder()->first()->id,
+            ];
+        });
     }
 }
