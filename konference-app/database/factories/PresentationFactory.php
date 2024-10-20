@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Conference;
 use App\Models\Room;
 use App\Models\User;
+use Exception;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Presentation>
@@ -28,8 +29,18 @@ class PresentationFactory extends Factory
             'end_time' => $this->faker->dateTime(),
             'conference_id' => Conference::factory(),
             'room_id' => Room::factory(),
-            'user_id' => User::inRandomOrder()->first()->id,
+            'user_id' => $this->getExistingRecordId(User::class),
         ];
+    }
+
+    private function getExistingRecordId(string $table): int
+    {
+        $record = $table::inRandomOrder()->first();
+
+        if(!$record) {
+            throw new Exception("No records found in the $table table, please create some records first.");
+        }
+        return $record->id;
     }
 
     public function usingExistingConferenceAndRoom()
