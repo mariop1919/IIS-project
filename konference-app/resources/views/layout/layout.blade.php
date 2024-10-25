@@ -1,4 +1,5 @@
 <!-- resources/views/layouts/app.blade.php -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,13 +14,30 @@
     <nav class="navbar navbar-expand-lg navbar-light container">
         <a class="navbar-brand" href="#">Conference System</a>
         <div class="collapse navbar-collapse justify-content-end">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" >Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" ">Register</a>
-                </li>
+            <ul class="navbar-nav ml-auto">
+                @guest
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('register') }}">Register</a>
+                    </li>
+                @endguest
+            
+                @auth
+                    <li class="nav-item">
+                        <span class="nav-link">Logged in: {{ auth()->user()->name }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('logout') }}"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            Logout
+                        </a>
+                    </li>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                @endauth
             </ul>
         </div>
     </nav>
@@ -33,8 +51,5 @@
     <p>&copy; {{ date('Y') }} Conference System. All rights reserved.</p>
 </footer>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
