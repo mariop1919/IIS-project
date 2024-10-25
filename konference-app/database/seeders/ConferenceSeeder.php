@@ -20,8 +20,7 @@ class ConferenceSeeder extends Seeder
             'price' => 22.22,
             'user_id' => 1,
         ]);
-
-
-        Conference::factory()->count(4)->create();
+        
+        Conference::factory()->usingExistingUser()->count(4)->create();
     }
 }

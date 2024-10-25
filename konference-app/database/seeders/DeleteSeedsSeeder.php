@@ -19,6 +19,7 @@ class DeleteSeedsSeeder extends Seeder
         DB::table('rooms')->truncate();
         DB::table('conference_room')->truncate();
         DB::table('reservations')->truncate();
+        DB::table('presentations')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
