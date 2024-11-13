@@ -12,7 +12,7 @@
 
 <header class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-light container">
-        <a class="navbar-brand" href="#">Conference System</a>
+        <a class="navbar-brand"  href="{{ route('home') }}">Conference System</a>
         <div class="collapse navbar-collapse justify-content-end">
             <ul class="navbar-nav ml-auto">
                 @guest
