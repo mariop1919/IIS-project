@@ -1,6 +1,6 @@
 <!-- resources/views/conferences/create.blade.php -->
 
-@extends('layout.layout')
+@extends('layouts.layout')
 
 @section('title', 'Create Conference')
 

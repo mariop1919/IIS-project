@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Conference;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ConferenceController extends Controller
 {
@@ -17,11 +18,11 @@ class ConferenceController extends Controller
     public function show($id)
     {
         $conference = Conference::with(['presentations.user', 'presentations.room'])->findOrFail($id);
-        return view('conferences.show', compact('conference'));
+        return view('conferences.detail', compact('conference'));
     }
     public function create()
     {
-        return view('conferences.create');
+        return view('conferences.CreateConference');
     }
 
     // save to database
@@ -40,7 +41,7 @@ class ConferenceController extends Controller
             'location' => $validated['location'],
             'capacity' => $validated['capacity'],
             'price' => $validated['price'],
-            'user_id' => auth()->id(), // id user
+            'user_id' => Auth::id(), // Get the currently authenticated user's ID
         ]);
 
         return redirect()->route('home')->with('success', 'Conference created successfully!');

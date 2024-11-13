@@ -1,4 +1,4 @@
-@extends('layout.layout')
+@extends('layouts.layout')
 
 @section('title', 'Conferences')
 
@@ -9,6 +9,8 @@
         @auth
             <a href="{{ route('conferences.create') }}" class="btn btn-success">Create New Conference</a>
         @endauth
+
+        <a href="{{ route('reservations.create') }}" class="btn btn-primary">Create Reservation</a>
     </div>
 
     <ul class="list-group">

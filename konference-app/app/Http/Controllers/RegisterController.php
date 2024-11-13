@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
@@ -30,7 +31,7 @@ class RegisterController extends Controller
         ]);
 
         // Log the user in
-        auth()->login($user);
+        Auth::login($user);
 
         // Redirect to the conferences page
         return redirect()->route('home')->with('success', 'Registration successful! Welcome!');

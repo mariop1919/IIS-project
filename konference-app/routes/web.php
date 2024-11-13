@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ConferenceController;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ReservationController;
 
 Route::get('/', [ConferenceController::class, 'index'])->name('home');
 Route::resource('conferences', ConferenceController::class);
@@ -20,3 +22,6 @@ Route::post('/login', [App\Http\Controllers\LoginController::class, 'login']);
 
 // zatial som povolil len admina na vytvaranie konferencii
 Route::get('conferences/create', [ConferenceController::class, 'create'])->name('conferences.create')->middleware('role:admin');
+
+Route::get('/reservations/create', [ReservationController::class, 'create'])->name('reservations.create');
+Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
