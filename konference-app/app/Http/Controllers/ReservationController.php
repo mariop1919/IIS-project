@@ -22,19 +22,20 @@ class ReservationController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'phone' => 'required|string|max:20',
-            'conference_id' => 'required|exists:conferences,id',
+            'conference_ids' => 'required|array',
+            'conference_ids.*' => 'exists:conferences,id',
         ]);
         
         // Create the reservation
-        Reservation::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'phone' => $validated['phone'],
-            'conference_id' => $validated['conference_id'],
-            'is_paid' => false,
-            'user_id' => Auth::id(),
-        ]);
-
+        foreach ($validated['conference_ids'] as $conference_id) {
+            Reservation::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'phone' => $validated['phone'],
+                'conference_id' => $conference_id,
+                'is_paid' => false,
+            ]);
+        }
         return redirect()->route('home')->with('success', 'Reservation created successfully!');
     }
 }
