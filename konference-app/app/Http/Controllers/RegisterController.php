@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use App\Models\Reservation;
 
 class RegisterController extends Controller
 {
@@ -32,6 +33,9 @@ class RegisterController extends Controller
 
         // Log the user in
         Auth::login($user);
+
+        // Update the reservation with the user_id
+        Reservation::where('email', $request->email)->update(['user_id' => $user->id]);
 
         // Redirect to the conferences page
         return redirect()->route('home')->with('success', 'Registration successful! Welcome!');

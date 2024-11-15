@@ -37,8 +37,8 @@
         <h4>Selected Conferences</h4>
         <ul id="selected_conferences"></ul>
 
-        <!-- Hidden Field for Selected Conferences -->
-        <input type="hidden" id="conference_ids" name="conference_ids">
+        <!-- Hidden Fields for Selected Conferences -->
+        <div id="hidden_conference_inputs"></div>
 
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
@@ -47,70 +47,78 @@
 <!-- JavaScript to handle adding and removing conferences -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const conferenceSelect = document.getElementById("conference_select");
-        const addConferenceButton = document.getElementById("add_conference");
-        const selectedConferencesList = document.getElementById("selected_conferences");
-        const conferenceIdsInput = document.getElementById("conference_ids");
+    const conferenceSelect = document.getElementById("conference_select");
+    const addConferenceButton = document.getElementById("add_conference");
+    const selectedConferencesList = document.getElementById("selected_conferences");
+    const hiddenConferenceInputs = document.getElementById("hidden_conference_inputs");
 
-        let selectedConferences = [];
+    let selectedConferences = [];
 
-        // Add conference to the selected list and remove from dropdown
-        addConferenceButton.addEventListener("click", function() {
-            const selectedOption = conferenceSelect.options[conferenceSelect.selectedIndex];
-            const conferenceId = selectedOption.value;
-            const conferenceName = selectedOption.text;
+    // Add conference to the selected list and remove from dropdown
+    addConferenceButton.addEventListener("click", function() {
+        const selectedOption = conferenceSelect.options[conferenceSelect.selectedIndex];
+        const conferenceId = selectedOption.value;
+        const conferenceName = selectedOption.text;
 
-            // Check if conference already selected
-            if (selectedConferences.some(conf => conf.id == conferenceId)) {
-                alert("Conference already added!");
-                return;
-            }
+        // Check if conference is already selected
+        if (selectedConferences.some(conf => conf.id === conferenceId)) {
+            alert("Conference already added!");
+            return;
+        }
 
-            // Add to selected conferences array
-            selectedConferences.push({ id: conferenceId, name: conferenceName });
-            updateSelectedConferences();
+        // Add to selected conferences array
+        selectedConferences.push({ id: conferenceId, name: conferenceName });
+        updateSelectedConferences();
 
-            // Remove selected conference from dropdown
-            conferenceSelect.remove(conferenceSelect.selectedIndex);
-        });
+        // Remove selected conference from dropdown
+        conferenceSelect.remove(conferenceSelect.selectedIndex);
+    });
 
-        // Update the displayed list of selected conferences
-        function updateSelectedConferences() {
-            selectedConferencesList.innerHTML = "";
+    // Update the displayed list of selected conferences
+    function updateSelectedConferences() {
+        selectedConferencesList.innerHTML = "";
+        hiddenConferenceInputs.innerHTML = "";
 
-            selectedConferences.forEach(conf => {
-                const li = document.createElement("li");
-                li.textContent = conf.name;
-                const removeButton = document.createElement("button");
-                removeButton.type = "button";
-                removeButton.classList.add("btn", "btn-link", "text-danger");
-                removeButton.textContent = "Remove";
-                removeButton.addEventListener("click", function() {
-                    removeConference(conf.id);
-                });
-                li.appendChild(removeButton);
-                selectedConferencesList.appendChild(li);
+        selectedConferences.forEach(conf => {
+            // Add to the displayed list
+            const li = document.createElement("li");
+            li.textContent = conf.name;
+
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.classList.add("btn", "btn-link", "text-danger");
+            removeButton.textContent = "Remove";
+            removeButton.addEventListener("click", function() {
+                removeConference(conf.id);
             });
 
-            // Update hidden input with IDs of selected conferences
-            conferenceIdsInput.value = selectedConferences.map(conf => conf.id).join(",");
-        }
+            li.appendChild(removeButton);
+            selectedConferencesList.appendChild(li);
 
-        // Remove conference from selected list and re-add to dropdown
-        window.removeConference = function(conferenceId) {
-            const conference = selectedConferences.find(conf => conf.id == conferenceId);
+            // Add hidden input field for the conference
+            const hiddenInput = document.createElement("input");
+            hiddenInput.type = "hidden";
+            hiddenInput.name = "conference_ids[]";
+            hiddenInput.value = conf.id;
+            hiddenConferenceInputs.appendChild(hiddenInput);
+        });
+    }
 
-            // Remove from selected conferences array
-            selectedConferences = selectedConferences.filter(conf => conf.id != conferenceId);
-            updateSelectedConferences();
+    // Remove conference from selected list and re-add to dropdown
+    function removeConference(conferenceId) {
+        const conference = selectedConferences.find(conf => conf.id === conferenceId);
 
-            // Re-add removed conference to dropdown
-            const option = document.createElement("option");
-            option.value = conference.id;
-            option.text = conference.name;
-            conferenceSelect.add(option);
-        }
-    });
+        // Remove from selected conferences array
+        selectedConferences = selectedConferences.filter(conf => conf.id !== conferenceId);
+        updateSelectedConferences();
+
+        // Re-add removed conference to dropdown
+        const option = document.createElement("option");
+        option.value = conference.id;
+        option.text = conference.name;
+        conferenceSelect.add(option);
+    }
+});
 </script>
 
 @endsection

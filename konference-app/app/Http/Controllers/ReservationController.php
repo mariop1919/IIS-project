@@ -22,7 +22,7 @@ class ReservationController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'phone' => 'required|string|max:20',
-            'conference_ids' => 'required|array',
+            'conference_ids' => 'required',
             'conference_ids.*' => 'exists:conferences,id',
         ]);
         
@@ -34,6 +34,7 @@ class ReservationController extends Controller
                 'phone' => $validated['phone'],
                 'conference_id' => $conference_id,
                 'is_paid' => false,
+                'user_id' => Auth::id(),
             ]);
         }
         return redirect()->route('home')->with('success', 'Reservation created successfully!');
