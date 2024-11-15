@@ -22,6 +22,7 @@ class PresentationSeeder extends Seeder
                 'conference_id' => 1,
                 'room_id' => 1,
                 'user_id' => 1,
+                'status' => 'approved'
         ]);
         
         Presentation::factory()->usingExistingConferenceAndRoom()->count(4)->create();

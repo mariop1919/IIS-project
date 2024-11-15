@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Presentation extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'description', 'photo', 'logo', 'start_time', 'end_time', 'conference_id', 'room_id', 'user_id'];
+    protected $fillable = ['title', 'description', 'photo', 'logo', 'start_time', 'end_time', 'status', 'conference_id', 'room_id', 'user_id'];
 
     public function user(): BelongsTo
     {
