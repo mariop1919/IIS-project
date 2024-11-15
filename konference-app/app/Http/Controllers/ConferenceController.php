@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class ConferenceController extends Controller
 {
     // returns true if the conference has available capacity
-    private function checkCapacity($conference)
+    public function checkCapacity($conference)
     {
         return $conference->reservations->count() < $conference->capacity;
     }

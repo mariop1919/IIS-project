@@ -6,12 +6,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Reservation;
 use App\Models\Conference;
+use App\Http\Controllers\ConferenceController;
 
 class ReservationController extends Controller
 {
     public function create()
     {
         $conferences = Conference::all(); // Get all conferences
+        $conferenceController = new ConferenceController();
+
+        foreach ($conferences as $conference) {
+            if (!$conferenceController->checkCapacity($conference)) {
+                
+                // removing full conferences
+                $conferences = $conferences->filter(function ($conf) use ($conference) {
+                    return $conf->id !== $conference->id;
+                });
+            }
+        }
+
         return view('reservations.CreateReservation', compact('conferences'));
     }
 
