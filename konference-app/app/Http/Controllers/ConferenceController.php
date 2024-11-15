@@ -11,7 +11,7 @@ class ConferenceController extends Controller
     // returns true if the conference has available capacity
     private function checkCapacity($conference)
     {
-        return $conference->reservations->count() <= $conference->capacity;
+        return $conference->reservations->count() < $conference->capacity;
     }
 
     public function index()
