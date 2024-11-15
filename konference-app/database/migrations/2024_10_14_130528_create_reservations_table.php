@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('phone');
             $table->foreignId('conference_id')->constrained();
             $table->boolean('is_paid')->default(false);
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->nullable()->constrained();
         });
     }
 
