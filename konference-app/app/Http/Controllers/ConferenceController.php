@@ -2,16 +2,27 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Conference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ConferenceController extends Controller
 {
+    // returns true if the conference has available capacity
+    private function checkCapacity($conference)
+    {
+        return $conference->reservations->count() <= $conference->capacity;
+    }
+
     public function index()
     {
-        $conferences = Conference::all(); // Get all conferences from the database
+        $conferences = Conference::with('reservations')->get(); // Get all conferences with reservations
+
+        // Check capacity for each conference
+        foreach ($conferences as $conference) {
+            $conference->is_full = !$this->checkCapacity($conference);
+        }
+
         return view('conferences.index', compact('conferences')); // Pass data to the view
     }
     
@@ -20,6 +31,7 @@ class ConferenceController extends Controller
         $conference = Conference::with(['presentations.user', 'presentations.room'])->findOrFail($id);
         return view('conferences.detail', compact('conference'));
     }
+
     public function create()
     {
         return view('conferences.CreateConference');
@@ -77,5 +89,4 @@ class ConferenceController extends Controller
         return redirect()->route('conferences.index')
             ->with('success', 'Conference deleted successfully!');
     }
-
 }

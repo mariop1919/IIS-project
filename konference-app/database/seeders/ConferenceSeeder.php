@@ -16,7 +16,7 @@ class ConferenceSeeder extends Seeder
             'name' => 'Laravel Conference',
             'description' => 'Conference about Laravel',
             'location' => 'Brno',
-            'capacity' => 100,
+            'capacity' => 0,
             'price' => 22.22,
             'user_id' => 1,
         ]);

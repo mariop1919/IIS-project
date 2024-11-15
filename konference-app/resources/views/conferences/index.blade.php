@@ -16,10 +16,15 @@
     <ul class="list-group">
         @foreach($conferences as $conference)
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>{{ $conference->name }}</span>
-                
+                <span>
+                    {{ $conference->name }}
+                    @if($conference->is_full)
+                        <span class="text-danger ms-2" style="font-size: 1.5rem;">Sold Out</span>
+                    @endif
+                </span>
                 <!-- Buttons container aligned to the right -->
-                <div class="d-flex ms-auto">
+                <div class="d-flex align-items-center">
+                    <span class="me-3">Capacity: {{ $conference->reservations->count() }}/{{ $conference->capacity }}</span>
                     <a href="{{ route('conferences.show', $conference->id) }}" class="btn btn-primary me-2">Details</a>
                     
                     @auth
