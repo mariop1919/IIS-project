@@ -20,9 +20,7 @@ Route::get('/login', [App\Http\Controllers\LoginController::class, 'showLoginFor
 Route::post('/login', [App\Http\Controllers\LoginController::class, 'login']);
 
 
-
-// zatial som povolil len admina na vytvaranie konferencii
-Route::get('conferences/create', [ConferenceController::class, 'create'])->name('conferences.create')->middleware('role:admin');
+Route::get('conferences/create', [ConferenceController::class, 'create'])->name('conferences.create')->middleware('auth');
 
 Route::get('/reservations/create', [ReservationController::class, 'create'])->name('reservations.create');
 Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');

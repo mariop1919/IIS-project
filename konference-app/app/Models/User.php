@@ -18,6 +18,8 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    // TO DO: delete 'is_registered' from the fillable array
     protected $fillable = [
         'name',
         'email',
