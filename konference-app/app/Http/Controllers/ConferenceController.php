@@ -46,5 +46,36 @@ class ConferenceController extends Controller
 
         return redirect()->route('home')->with('success', 'Conference created successfully!');
     }
+    
+    public function edit($id)
+    {
+        $conference = Conference::findOrFail($id);
+        return view('conferences.edit', compact('conference'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'capacity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        $conference = Conference::findOrFail($id);
+        $conference->update($validated);
+
+        return redirect()->route('conferences.show', $conference->id)
+            ->with('success', 'Conference updated successfully!');
+    }
+
+    public function destroy($id)
+    {
+        $conference = Conference::findOrFail($id);
+        $conference->delete();
+
+        return redirect()->route('conferences.index')
+            ->with('success', 'Conference deleted successfully!');
+    }
 
 }

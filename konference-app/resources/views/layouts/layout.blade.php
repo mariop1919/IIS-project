@@ -44,6 +44,24 @@
 </header>
 
 <main class="container my-4">
+    <!-- Flash messages for success or error -->
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <!-- Content of the page -->
     @yield('content')
 </main>
 

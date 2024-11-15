@@ -5,6 +5,7 @@ use App\Http\Controllers\ConferenceController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\RoomController;
 
 Route::get('/', [ConferenceController::class, 'index'])->name('home');
 Route::resource('conferences', ConferenceController::class);
@@ -25,3 +26,10 @@ Route::get('conferences/create', [ConferenceController::class, 'create'])->name(
 
 Route::get('/reservations/create', [ReservationController::class, 'create'])->name('reservations.create');
 Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
+
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('conferences/{conference}')->group(function () {
+        Route::get('rooms/create', [RoomController::class, 'create'])->name('conference_rooms.create');
+        Route::post('rooms', [RoomController::class, 'store'])->name('conference_rooms.store');
+    });
+});
