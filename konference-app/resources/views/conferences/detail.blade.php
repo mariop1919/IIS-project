@@ -26,7 +26,6 @@
                     <li class="list-group-item">
                         <strong>{{ $presentation->title }}</strong><br>
                         Speaker: {{ $presentation->user->name }}<br>
-                        Room: {{ $presentation->room->name }}<br>
                         Start: {{ $presentation->start_time }}<br>
                         End: {{ $presentation->end_time }}<br>
                         <p>{{ $presentation->description }}</p>

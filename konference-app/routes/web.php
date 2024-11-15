@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\PresentationController;
 
 Route::get('/', [ConferenceController::class, 'index'])->name('home');
 Route::resource('conferences', ConferenceController::class);
@@ -30,4 +31,17 @@ Route::middleware(['auth'])->group(function () {
         Route::get('rooms/create', [RoomController::class, 'create'])->name('conference_rooms.create');
         Route::post('rooms', [RoomController::class, 'store'])->name('conference_rooms.store');
     });
+});
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/conferences/{conference_id}/presentations/create', [PresentationController::class, 'create'])->name('presentations.create');
+    
+    Route::post('/conferences/{conference_id}/presentations', [PresentationController::class, 'register'])->name('presentations.register');
+    
+    Route::get('/conferences/{conference_id}/presentations/manage', [PresentationController::class, 'manage'])->name('presentations.manage');
+
+    Route::post('/presentations/{presentation}/approve', [PresentationController::class, 'approve'])->name('presentations.approve');
+
+    Route::post('/presentations/{presentation}/reject', [PresentationController::class, 'reject'])->name('presentations.reject');
 });

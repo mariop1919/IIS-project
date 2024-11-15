@@ -28,14 +28,15 @@
                     <a href="{{ route('conferences.show', $conference->id) }}" class="btn btn-primary me-2">Details</a>
                     
                     @auth
+                    <a href="{{ route('presentations.create', $conference->id) }}" class="btn btn-success ms-2">Add Presentation</a>
                         @if(auth()->user()->id == $conference->user_id || auth()->user()->role == 'admin')
                             <a href="{{ route('conferences.edit', $conference->id) }}" class="btn btn-warning me-2">Edit</a>
-
+                            <a href="{{ route('presentations.manage', $conference->id) }}" class="btn btn-info ms-2">Manage Presentations</a>
                             <form action="{{ route('conferences.destroy', $conference->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this conference?')">Delete</button>
-                            </form>
+                            </form>                            
                         @endif
                     @endauth
                 </div>
