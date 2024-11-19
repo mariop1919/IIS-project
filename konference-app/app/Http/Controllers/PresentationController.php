@@ -6,7 +6,6 @@ use App\Models\Conference;
 use App\Models\Presentation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\ConferenceRoom;
 
 class PresentationController extends Controller
 {
@@ -36,7 +35,7 @@ class PresentationController extends Controller
         'start_time' => $validated['start_time'],
         'end_time' => $validated['end_time'],
         'conference_id' => $validated['conference_id'],
-        'user_id' => auth()->id(),
+        'user_id' => Auth::id(),
         'status' => 'pending',  // Set the initial status to pending
     ]);
 
@@ -53,7 +52,7 @@ class PresentationController extends Controller
 
 
         // Ensure that the user is authorized (conference creator or admin)
-        if (auth()->id() !== $conference->user_id && Auth::user()->role !== 'admin') {
+        if (Auth::user()->id !== $conference->user_id && Auth::user()->role !== 'admin') {
             return redirect()->route('conferences.show', $conference_id)
                 ->with('error', 'You are not authorized to manage presentations.');
         }

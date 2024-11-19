@@ -32,6 +32,7 @@
                     @auth
                         @if(auth()->user()->id == $conference->user_id || auth()->user()->role == 'admin')
                             <a href="{{ route('conferences.edit', $conference->id) }}" class="btn btn-warning me-2">Edit</a>
+                            <a href="{{ route('reservations.manage', $conference->id) }}" class="btn btn-dark ms-2">Manage Reservations</a>
                             <a href="{{ route('presentations.manage', $conference->id) }}" class="btn btn-info ms-2">Manage Presentations</a>
                             <form action="{{ route('conferences.destroy', $conference->id) }}" method="POST" style="display:inline;">
                                 @csrf

@@ -76,4 +76,24 @@ class ReservationController extends Controller
         }
         return view('reservations.MyReservations', compact('reservations'));
     }
+
+    public function manage($conference_id)
+    {
+        $conference = Conference::findOrFail($conference_id);
+        $reservations = Reservation::where('conference_id', $conference_id)->get();
+        if (Auth::user()->id !== $conference->user_id && Auth::user()->role !== 'admin') {
+            return redirect()->route('conferences.show', $conference_id)
+                ->with('error', 'You are not authorized to manage reservations.');
+        }
+        return view('reservations.manage', compact('conference', 'reservations'));
+    }
+
+    public function confirm($reservation_id)
+    {
+        $reservation = Reservation::findOrFail($reservation_id);
+        $reservation->is_paid = true;
+        $reservation->save();
+        return redirect()->route('reservations.manage', $reservation->conference_id)
+            ->with('success', 'Reservation confirmed successfully!');
+    }
 }

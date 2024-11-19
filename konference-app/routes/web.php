@@ -48,5 +48,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/presentations/{presentation}/edit', [PresentationController::class, 'edit'])->name('presentations.edit');
     Route::put('/presentations/{presentation}', [PresentationController::class, 'update'])->name('presentations.update');
     
-
+    Route::get('/conferences/{conference_id}/reservations/manage', [ReservationController::class, 'manage'])->name('reservations.manage');
+    Route::post('/reservations/{reservation}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
 });
