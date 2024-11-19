@@ -10,12 +10,12 @@
         <p><strong>Capacity:</strong> {{ $conference->capacity }}</p>
         <p><strong>Price:</strong> ${{ $conference->price }}</p>
 
-        @if(auth()->check() && auth()->user()->role === 'admin')
-        <a href="{{ route('conference_rooms.create', $conference) }}" class="btn btn-primary mb-3">
-            Add Room
-        </a>
+        @if($startTime && $endTime)
+            <p><strong>Start Time:</strong> {{ $startTime }}</p>
+            <p><strong>End Time:</strong> {{ $endTime }}</p>
+        @else
+            <p>Conference has not been approoved yet.</p>
         @endif
-        <!-- Button for Admin to Add Room -->
 
         <h2>Presentations</h2>
         @if($conference->presentations->isEmpty())
