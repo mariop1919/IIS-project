@@ -35,13 +35,17 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/conferences/{conference_id}/presentations/create', [PresentationController::class, 'create'])->name('presentations.create');
-    
-    Route::post('/conferences/{conference_id}/presentations', [PresentationController::class, 'register'])->name('presentations.register');
-    
+    // Form to create a presentation with conference selection
+    Route::get('/presentations/create', [PresentationController::class, 'create'])->name('presentations.create');
+
+    // Submitting the form to register a presentation for a selected conference
+    Route::post('/presentations', [PresentationController::class, 'store'])->name('presentations.store');
     Route::get('/conferences/{conference_id}/presentations/manage', [PresentationController::class, 'manage'])->name('presentations.manage');
 
     Route::post('/presentations/{presentation}/approve', [PresentationController::class, 'approve'])->name('presentations.approve');
-
     Route::post('/presentations/{presentation}/reject', [PresentationController::class, 'reject'])->name('presentations.reject');
+    Route::get('/presentations/{presentation}/edit', [PresentationController::class, 'edit'])->name('presentations.edit');
+    Route::put('/presentations/{presentation}', [PresentationController::class, 'update'])->name('presentations.update');
+    
+
 });

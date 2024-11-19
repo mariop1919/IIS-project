@@ -42,9 +42,13 @@ class ConferenceController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
+            'location' => 'required|alpha|max:255',
             'capacity' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
+        ], [
+            // Custom error message for location field
+            'location.alpha' => 'The location field may only contain letters.',
+            'location.max' => 'The location may not be greater than 255 characters.',
         ]);
 
         // create new conference

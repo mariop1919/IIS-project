@@ -18,6 +18,9 @@
         <div class="form-group">
             <label for="location">Location</label>
             <input type="text" name="location" class="form-control" placeholder="Enter location" required>
+            @error('location')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
         
         <div class="form-group">
