@@ -12,7 +12,8 @@
 
 <header class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-light container">
-        <a class="navbar-brand"  href="{{ route('home') }}">Conference System</a>
+        <a class="navbar-brand" href="{{ route('home') }}">Conference System</a>
+        <a href="{{ route('reservations.index') }}" class="btn btn-secondary ml-2">My Reservations</a>
         <div class="collapse navbar-collapse justify-content-end">
             <ul class="navbar-nav ml-auto">
                 @guest

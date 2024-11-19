@@ -56,23 +56,30 @@
 
     // Add conference to the selected list and remove from dropdown
     addConferenceButton.addEventListener("click", function() {
-        const selectedOption = conferenceSelect.options[conferenceSelect.selectedIndex];
-        const conferenceId = selectedOption.value;
-        const conferenceName = selectedOption.text;
+    const selectedOption = conferenceSelect.options[conferenceSelect.selectedIndex];
+    const conferenceId = selectedOption.value;
+    const conferenceName = selectedOption.text;
 
-        // Check if conference is already selected
-        if (selectedConferences.some(conf => conf.id === conferenceId)) {
-            alert("Conference already added!");
-            return;
-        }
+    // Check if the selected option is the default one
+    if (selectedOption.disabled || !conferenceId) {
+        alert("Please select a valid conference!");
+        return;
+    }
 
-        // Add to selected conferences array
-        selectedConferences.push({ id: conferenceId, name: conferenceName });
-        updateSelectedConferences();
+    // Check if the conference is already selected
+    if (selectedConferences.some(conf => conf.id === conferenceId)) {
+        alert("Conference already added!");
+        return;
+    }
 
-        // Remove selected conference from dropdown
-        conferenceSelect.remove(conferenceSelect.selectedIndex);
-    });
+    // Add to selected conferences array
+    selectedConferences.push({ id: conferenceId, name: conferenceName });
+    updateSelectedConferences();
+
+    // Remove selected conference from dropdown
+    conferenceSelect.remove(conferenceSelect.selectedIndex);
+});
+
 
     // Update the displayed list of selected conferences
     function updateSelectedConferences() {

@@ -50,6 +50,30 @@ class ReservationController extends Controller
                 'user_id' => Auth::id(),
             ]);
         }
+
+        if (!Auth::check()) {
+            $request->session()->put('guest_email', $validated['email']);
+        }
+
         return redirect()->route('home')->with('success', 'Reservation created successfully!');
+    }
+
+    public function index(Request $request)
+    {
+        if (Auth::check()) {
+            // Fetch reservations for the authenticated user
+            $reservations = Auth::user()->reservations;
+        } 
+        else {
+            // Fetch reservations for the unauthenticated user based on email stored in the session
+            $userEmail = $request->session()->get('guest_email');
+            if ($userEmail) {
+                $reservations = Reservation::where('email', $userEmail)->get();
+            }
+            else {
+                $reservations = collect(); // Empty collection
+            }
+        }
+        return view('reservations.MyReservations', compact('reservations'));
     }
 }

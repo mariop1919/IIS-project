@@ -25,6 +25,7 @@ Route::get('conferences/create', [ConferenceController::class, 'create'])->name(
 
 Route::get('/reservations/create', [ReservationController::class, 'create'])->name('reservations.create');
 Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
+Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('conferences/{conference}')->group(function () {
