@@ -9,16 +9,16 @@
     <form action="{{ route('reservations.store') }}" method="POST">
         @csrf
         <div class="form-group">
-        <label for="name">Name <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+            <label for="name">Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" value="{{ old('name') }}" required>
         </div>
         <div class="form-group">
-        <label for="email">Email <span class="text-danger">*</span></label>
-            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
+            <label for="email">Email <span class="text-danger">*</span></label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" value="{{ old('email') }}" required>
         </div>
         <div class="form-group">
             <label for="phone">Phone</label>
-            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}">
+            <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter your phone number (optional)" value="{{ old('phone') }}">
         </div>
 
         <!-- Conference Selection -->
