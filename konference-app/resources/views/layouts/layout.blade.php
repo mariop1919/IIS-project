@@ -9,7 +9,7 @@
 <body>
 
 <header class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-light container">
+    <nav class="navbar navbar-expand-lg navbar-light container-fluid">
         <a class="navbar-brand" href="{{ route('home') }}">Conference System</a>
         
         <!-- Show "My Reservations" and "Timetable" buttons for authenticated users -->
@@ -48,7 +48,7 @@
     </nav>
 </header>
 
-<main class="container my-4">
+<main class="container-fluid my-4">
     <!-- Flash messages for success or error -->
     @if(session('success'))
         <div class="alert alert-success">
