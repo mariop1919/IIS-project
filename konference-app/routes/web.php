@@ -7,6 +7,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\PresentationController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', [ConferenceController::class, 'index'])->name('home');
 Route::resource('conferences', ConferenceController::class);
@@ -48,4 +49,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/presentations/timetable', [PresentationController::class, 'timetable'])->name('presentations.timetable');
     Route::get('/conferences/{conference_id}/reservations/manage', [ReservationController::class, 'manage'])->name('reservations.manage');
     Route::post('/reservations/{reservation}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
+});
+
+Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('users', [AdminController::class, 'index'])->name('index');
+    Route::get('users/{user}/edit', [AdminController::class, 'edit'])->name('edit');
+    Route::put('users/{user}', [AdminController::class, 'update'])->name('update');
+    Route::delete('users/{user}', [AdminController::class, 'destroy'])->name('destroy');
 });

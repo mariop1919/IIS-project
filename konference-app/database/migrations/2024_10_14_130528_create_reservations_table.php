@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('phone');
-            $table->foreignId('conference_id')->constrained();
+            $table->foreignId('conference_id')->constrained()->onDelete('cascade');
             $table->boolean('is_paid')->default(false);
-            $table->foreignId('user_id')->nullable()->constrained();
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
         });
     }
 

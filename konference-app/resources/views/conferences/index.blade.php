@@ -8,6 +8,9 @@
         
         <div>
             @auth
+                @if(auth()->user()->role == 'admin')
+                    <a href="{{ route('admin.index') }}" class="btn btn-danger ms-2">Admin Panel</a>
+                @endif
                 <a href="{{ route('conferences.create') }}" class="btn btn-success">Create Conference</a>
                 <a href="{{ route('presentations.create') }}" class="btn btn-success ms-2">Create Presentation</a>
                 <a href="{{ route('conference_rooms.create') }}" class="btn btn-primary">Create Room</a>
