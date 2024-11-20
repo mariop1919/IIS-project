@@ -19,21 +19,30 @@
             You don't have any presentations for this week.
         </div>
     @else
-        <!-- Timetable for the week -->
-        <div class="row">
-            @foreach($presentations as $presentation)
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $presentation->title }}</h5>
-                            <p>Room: {{ $presentation->room->name ?? 'N/A' }}</p>
-                            <p>
-                                {{ \Carbon\Carbon::parse($presentation->start_time)->format('l, F j, Y g:i A') }} - 
-                                {{ \Carbon\Carbon::parse($presentation->end_time)->format('g:i A') }}
-                            </p>
-                            <p>Speaker: {{ $presentation->user->name }}</p>
-                        </div>
-                    </div>
+        <!-- Timetable grouped by day -->
+        <div class="timetable">
+            @foreach(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as $day)
+                <h3>{{ $day }}</h3>
+                <div class="row">
+                    @if(isset($presentations[$day]) && $presentations[$day]->isNotEmpty())
+                        @foreach($presentations[$day] as $presentation)
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ $presentation->title }}</h5>
+                                        <p>Room: {{ $presentation->room->name ?? 'N/A' }}</p>
+                                        <p>
+                                            {{ \Carbon\Carbon::parse($presentation->start_time)->format('g:i A') }} - 
+                                            {{ \Carbon\Carbon::parse($presentation->end_time)->format('g:i A') }}
+                                        </p>
+                                        <p>Speaker: {{ $presentation->user->name }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <p>No presentations scheduled for {{ $day }}.</p>
+                    @endif
                 </div>
             @endforeach
         </div>
@@ -41,5 +50,4 @@
 
     <a href="{{ route('home') }}" class="btn btn-primary mt-3">Back to Dashboard</a>
 </div>
-
 @endsection

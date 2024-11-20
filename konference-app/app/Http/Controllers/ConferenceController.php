@@ -50,17 +50,18 @@ class ConferenceController extends Controller
     // save to database
     public function store(Request $request)
 {
-    
     $validated = $request->validate([
         'name' => 'required|string|max:255',
         'location' => 'required|alpha|max:255',
         'capacity' => 'required|integer|min:1',
         'price' => 'required|numeric|min:0',
-        'start_time' => 'required|date',
+        'start_time' => 'required|date|after_or_equal:now', // Ensures the start time is in the future
         'end_time' => 'required|date|after:start_time',
     ], [
-        'location.alpha' => 'The location field may only contain letters.',
-        'location.max' => 'The location may not be greater than 255 characters.',
+        'capacity.min' => 'The capacity must be at least 1.',
+        'price.min' => 'The price must be at least 0.',
+        'start_time.after_or_equal' => 'The conference must start in the future.',
+        'end_time.after' => 'The end time must be after the start time.',
     ]);
 
     // Create the conference
@@ -71,10 +72,8 @@ class ConferenceController extends Controller
         'price' => $validated['price'],
         'start_time' => $validated['start_time'],
         'end_time' => $validated['end_time'],
-        'user_id' => Auth::id(), // Get the currently authenticated user's ID
+        'user_id' => Auth::id(),
     ]);
-
-    // Insert the start_time and end_time into the ConferenceRoom pivot table
 
     return redirect()->route('home')->with('success', 'Conference created successfully!');
 }

@@ -27,16 +27,12 @@ class PresentationController extends Controller
         'conference_id' => 'required|exists:conferences,id',  // Ensure a valid conference is selected
         'title' => 'required|string|max:255',
         'description' => 'nullable|string',
-        'start_time' => 'required|date',
-        'end_time' => 'required|date|after:start_time',
     ]);
 
     // Create the presentation with status 'pending'
     Presentation::create([
         'title' => $validated['title'],
         'description' => $validated['description'],
-        'start_time' => $validated['start_time'],
-        'end_time' => $validated['end_time'],
         'conference_id' => $validated['conference_id'],
         'user_id' => Auth::id(),
         'status' => 'pending',  // Set the initial status to pending
@@ -174,35 +170,34 @@ public function update(Request $request, $id)
     return redirect()->route('presentations.manage', $presentation->conference_id)
         ->with('success', 'Presentation updated successfully!');
 }
-    public function timetable(Request $request)
-    {
-        // Determine the current week's starting date (default to today if no date provided)
-        $currentDate = $request->query('date') 
-            ? Carbon::parse($request->query('date')) 
-            : Carbon::now();
-    
-        // Calculate the start and end of the week independently
-        $startOfWeek = $currentDate->copy()->startOfWeek(); // Start of the week (Monday)
-        $endOfWeek = $currentDate->copy()->endOfWeek();    // End of the week (Sunday)
-    
-        // Get the user's presentations within the week's range
-        $presentations = Presentation::where('user_id', auth()->id())
-            ->whereBetween('start_time', [$startOfWeek, $endOfWeek])
-            ->orderBy('start_time')
-            ->get();
-    
-        // Format dates for view purposes
-        $formattedStartOfWeek = $startOfWeek->format('F j, Y');
-        $formattedEndOfWeek = $endOfWeek->format('F j, Y');
-    
-        return view('presentations.timetable', compact(
-            'presentations',
-            'startOfWeek',
-            'endOfWeek',
-            'formattedStartOfWeek',
-            'formattedEndOfWeek'
-        ));
-    }
+public function timetable(Request $request)
+{
+    $date = $request->get('date', now()->startOfWeek());
+    $startOfWeek = Carbon::parse($date)->startOfWeek();
+    $endOfWeek = $startOfWeek->copy()->endOfWeek();
+
+    $presentations = Presentation::whereBetween('start_time', [$startOfWeek, $endOfWeek])
+        ->with(['room', 'user'])
+        ->get()
+        ->groupBy(function ($presentation) {
+            return Carbon::parse($presentation->start_time)->format('l'); // Group by day name
+        });
+
+    return view('presentations.timetable', [
+        'presentations' => $presentations,
+        'startOfWeek' => $startOfWeek,
+        'endOfWeek' => $endOfWeek,
+        'formattedStartOfWeek' => $startOfWeek->format('F j, Y'),
+        'formattedEndOfWeek' => $endOfWeek->format('F j, Y'),
+    ]);
+}
+    public function destroy($id)
+{
+    $presentation = Presentation::findOrFail($id);
+    $presentation->delete();
+
+    return redirect()->back()->with('success', 'Presentation rejected successfully.');
+}
 
 
 

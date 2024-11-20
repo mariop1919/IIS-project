@@ -32,16 +32,7 @@
             </div>
 
             <!-- Presentation Start Time -->
-            <div class="form-group">
-                <label for="start_time">Start Time</label>
-                <input type="datetime-local" name="start_time" class="form-control" required>
-            </div>
-
-            <!-- Presentation End Time -->
-            <div class="form-group">
-                <label for="end_time">End Time</label>
-                <input type="datetime-local" name="end_time" class="form-control" required>
-            </div>
+            
 
             <button type="submit" class="btn btn-primary">Submit Presentation</button>
         </form>

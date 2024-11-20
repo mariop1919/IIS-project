@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('speaker');
             $table->string('photo')->nullable();
             $table->string('logo')->nullable();
-            $table->dateTime('start_time');
-            $table->dateTime('end_time');
+            $table->dateTime('start_time')->nullable();
+            $table->dateTime('end_time')->nullable();
             $table->foreignId('conference_id')->constrained()->onDelete('cascade');
             $table->foreignId('room_id')->nullable()->constrained()->onDelete('cascade');
         });

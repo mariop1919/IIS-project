@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <h1>Manage Presentations for {{ $conference->name }}</h1>
 
     <!-- List of presentations -->
@@ -58,6 +58,11 @@
                 <td>
                     @if($presentation->status == 'pending')
                         <button type="submit" class="btn btn-success">Approve</button>
+                        </form>
+                        <form action="{{ route('presentations.destroy', $presentation->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want reject presentation? It will be deleted from database.')">Reject</button>
                         </form>
                     @else
                         <a href="{{ route('presentations.edit', $presentation->id) }}" class="btn btn-warning">Edit</a>

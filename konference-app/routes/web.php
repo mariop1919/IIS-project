@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
     // Submitting the form to register a presentation for a selected conference
     Route::post('/presentations', [PresentationController::class, 'store'])->name('presentations.store');
     Route::get('/conferences/{conference_id}/presentations/manage', [PresentationController::class, 'manage'])->name('presentations.manage');
+    Route::delete('/presentations/{id}', [PresentationController::class, 'destroy'])->name('presentations.destroy');
 
     Route::post('/presentations/{presentation}/approve', [PresentationController::class, 'approve'])->name('presentations.approve');
     Route::post('/presentations/{presentation}/reject', [PresentationController::class, 'reject'])->name('presentations.reject');
