@@ -52,10 +52,10 @@ class ConferenceController extends Controller
 {
     $validated = $request->validate([
         'name' => 'required|string|max:255',
-        'location' => 'required|alpha|max:255',
+        'location' => 'nullable|alpha|max:255', // `nullable` means this field is optional
         'capacity' => 'required|integer|min:1',
         'price' => 'required|numeric|min:0',
-        'start_time' => 'required|date|after_or_equal:now', // Ensures the start time is in the future
+        'start_time' => 'required|date|after_or_equal:now',
         'end_time' => 'required|date|after:start_time',
     ], [
         'capacity.min' => 'The capacity must be at least 1.',
