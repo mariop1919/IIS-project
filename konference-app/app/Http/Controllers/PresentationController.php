@@ -176,7 +176,8 @@ public function timetable(Request $request)
     $startOfWeek = Carbon::parse($date)->startOfWeek();
     $endOfWeek = $startOfWeek->copy()->endOfWeek();
 
-    $presentations = Presentation::whereBetween('start_time', [$startOfWeek, $endOfWeek])
+    $presentations = Presentation::where('status', 'approved')
+        ->whereBetween('start_time', [$startOfWeek, $endOfWeek])
         ->with(['room', 'user'])
         ->get()
         ->groupBy(function ($presentation) {

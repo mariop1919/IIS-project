@@ -18,11 +18,11 @@
         @endif
 
         <h2>Presentations</h2>
-        @if($conference->presentations->isEmpty())
+        @if($approvedPresentations->isEmpty())
             <p>No presentations available for this conference.</p>
         @else
             <ul class="list-group">
-                @foreach($conference->presentations as $presentation)
+                @foreach($approvedPresentations as $presentation)
                     <li class="list-group-item">
                         <strong>{{ $presentation->title }}</strong><br>
                         Speaker: {{ $presentation->user->name }}<br>

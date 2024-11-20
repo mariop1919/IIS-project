@@ -30,6 +30,9 @@ class ConferenceController extends Controller
     public function show($id)
     {
         $conference = Conference::with(['presentations.user', 'presentations.room'])->findOrFail($id);
+        $approvedPresentations = $conference->presentations->filter(function ($presentation) {
+            return $presentation->status === 'approved'; // Only approved presentations
+        });
         
         $pivotData = DB::table('conference_room')
             ->where('conference_id', $id)
@@ -39,7 +42,7 @@ class ConferenceController extends Controller
         $startTime = $pivotData ? $pivotData->start_time : null;
         $endTime = $pivotData ? $pivotData->end_time : null;
 
-        return view('conferences.detail', compact('conference', 'startTime', 'endTime'));
+        return view('conferences.detail', compact('conference', 'approvedPresentations', 'startTime', 'endTime'));
     }
 
     public function create()
