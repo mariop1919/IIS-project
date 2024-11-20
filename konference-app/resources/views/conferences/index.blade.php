@@ -30,7 +30,7 @@
                 </span>
 
                 <div class="d-flex align-items-center">
-                    <span class="me-3">Capacity: {{ $conference->reservations->count() }}/{{ $conference->capacity }}</span>
+                    <span class="text-spacing">Capacity: {{ $conference->reservations->count() }}/{{ $conference->capacity }}</span>
                     <a href="{{ route('conferences.show', $conference->id) }}" class="btn btn-primary me-2">Details</a>
                     
                     @auth
@@ -57,6 +57,9 @@
 }
 .btn:last-child {
     margin-right: 0; /* Removes extra spacing on the last button */
+}
+.text-spacing {
+    margin-right: 0.5rem; /* Adjust the value for the desired spacing */
 }
 </style>
 @endsection
