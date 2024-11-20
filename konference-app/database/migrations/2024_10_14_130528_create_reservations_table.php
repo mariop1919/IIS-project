@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('email');
-            $table->string('phone');
+            $table->string('phone')->nullable();
             $table->foreignId('conference_id')->constrained()->onDelete('cascade');
             $table->boolean('is_paid')->default(false);
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');

@@ -32,7 +32,7 @@ class RoomController extends Controller
     $validated = $request->validate([
         'conference_id' => 'required|exists:conferences,id',
         'room_name' => 'required|string|max:255',
-        'equipment' => 'required|string|max:255',
+        'equipment' => 'nullable|string|max:255',
     ]);
 
     // Step 1: Create a new room

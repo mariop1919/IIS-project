@@ -8,29 +8,17 @@
     <h2>Create Reservation</h2>
     <form action="{{ route('reservations.store') }}" method="POST">
         @csrf
-
-        <!-- Display all validation errors at the top -->
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <div class="form-group">
-            <label for="name">Name</label>
+        <label for="name">Name <span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
         </div>
         <div class="form-group">
-            <label for="email">Email</label>
+        <label for="email">Email <span class="text-danger">*</span></label>
             <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
         </div>
         <div class="form-group">
             <label for="phone">Phone</label>
-            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
+            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}">
         </div>
 
         <!-- Conference Selection -->

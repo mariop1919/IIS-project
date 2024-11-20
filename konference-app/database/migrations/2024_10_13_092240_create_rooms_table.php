@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('capacity');
-            $table->string('equipment');
+            $table->string('equipment')->nullable();
             $table->timestamps();
         });
     }

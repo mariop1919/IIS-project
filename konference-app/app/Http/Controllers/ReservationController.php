@@ -38,7 +38,7 @@ class ReservationController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => 'nullable|string|max:20',
             'conference_ids' => 'required|array',
             'conference_ids.*' => 'exists:conferences,id',
             'num_of_reservations' => 'required|array',
