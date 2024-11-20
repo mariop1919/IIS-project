@@ -8,17 +8,29 @@
     <h2>Create Reservation</h2>
     <form action="{{ route('reservations.store') }}" method="POST">
         @csrf
+
+        <!-- Display all validation errors at the top -->
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" name="name" required>
+            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
         </div>
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" name="email" required>
+            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
         </div>
         <div class="form-group">
             <label for="phone">Phone</label>
-            <input type="text" class="form-control" id="phone" name="phone" required>
+            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
         </div>
 
         <!-- Conference Selection -->
@@ -27,11 +39,15 @@
             <select class="form-control" id="conference_select">
                 <option disabled selected>Select a Conference</option>
                 @foreach($conferences as $conference)
-                    <option value="{{ $conference->id }}">{{ $conference->name }}</option>
+                    <option value="{{ $conference->id }}" data-original-text="{{ $conference->name }} ({{ $availableTickets[$conference->id] }} tickets available)">{{ $conference->name }} ({{ $availableTickets[$conference->id] }} tickets available)</option>
                 @endforeach
             </select>
-            <button type="button" id="add_conference" class="btn btn-secondary mt-2">Add Conference</button>
         </div>
+        <div class="form-group">
+            <label for="num_reservations">Number of Reservations</label>
+            <input type="number" class="form-control" id="num_reservations" min="1" value="1">
+        </div>
+        <button type="button" id="add_conference" class="btn btn-secondary mt-2">Add Conference</button>
 
         <!-- List of Selected Conferences -->
         <h4>Selected Conferences</h4>
@@ -47,85 +63,93 @@
 <!-- JavaScript to handle adding and removing conferences -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-    const conferenceSelect = document.getElementById("conference_select");
-    const addConferenceButton = document.getElementById("add_conference");
-    const selectedConferencesList = document.getElementById("selected_conferences");
-    const hiddenConferenceInputs = document.getElementById("hidden_conference_inputs");
+        const conferenceSelect = document.getElementById("conference_select");
+        const addConferenceButton = document.getElementById("add_conference");
+        const selectedConferencesList = document.getElementById("selected_conferences");
+        const hiddenConferenceInputs = document.getElementById("hidden_conference_inputs");
+        const numReservationsInput = document.getElementById("num_reservations");
 
-    let selectedConferences = [];
+        let selectedConferences = [];
 
-    // Add conference to the selected list and remove from dropdown
-    addConferenceButton.addEventListener("click", function() {
-    const selectedOption = conferenceSelect.options[conferenceSelect.selectedIndex];
-    const conferenceId = selectedOption.value;
-    const conferenceName = selectedOption.text;
+        // Add conference to the selected list and remove from dropdown
+        addConferenceButton.addEventListener("click", function() {
+            const selectedOption = conferenceSelect.options[conferenceSelect.selectedIndex];
+            const conferenceId = selectedOption.value;
+            const conferenceName = selectedOption.text.split(' (')[0]; // Remove the "tickets available" text
+            const numReservations = numReservationsInput.value;
 
-    // Check if the selected option is the default one
-    if (selectedOption.disabled || !conferenceId) {
-        alert("Please select a valid conference!");
-        return;
-    }
+            // Check if the selected option is the default one
+            if (selectedOption.disabled || !conferenceId) {
+                alert("Please select a valid conference!");
+                return;
+            }
 
-    // Check if the conference is already selected
-    if (selectedConferences.some(conf => conf.id === conferenceId)) {
-        alert("Conference already added!");
-        return;
-    }
+            // Check if the conference is already selected
+            if (selectedConferences.some(conf => conf.id === conferenceId)) {
+                alert("Conference already added!");
+                return;
+            }
 
-    // Add to selected conferences array
-    selectedConferences.push({ id: conferenceId, name: conferenceName });
-    updateSelectedConferences();
+            // Add to selected conferences array
+            selectedConferences.push({ id: conferenceId, name: conferenceName, originalText: selectedOption.dataset.originalText, numReservations: numReservations });
+            updateSelectedConferences();
 
-    // Remove selected conference from dropdown
-    conferenceSelect.remove(conferenceSelect.selectedIndex);
-});
-
-
-    // Update the displayed list of selected conferences
-    function updateSelectedConferences() {
-        selectedConferencesList.innerHTML = "";
-        hiddenConferenceInputs.innerHTML = "";
-
-        selectedConferences.forEach(conf => {
-            // Add to the displayed list
-            const li = document.createElement("li");
-            li.textContent = conf.name;
-
-            const removeButton = document.createElement("button");
-            removeButton.type = "button";
-            removeButton.classList.add("btn", "btn-link", "text-danger");
-            removeButton.textContent = "Remove";
-            removeButton.addEventListener("click", function() {
-                removeConference(conf.id);
-            });
-
-            li.appendChild(removeButton);
-            selectedConferencesList.appendChild(li);
-
-            // Add hidden input field for the conference
-            const hiddenInput = document.createElement("input");
-            hiddenInput.type = "hidden";
-            hiddenInput.name = "conference_ids[]";
-            hiddenInput.value = conf.id;
-            hiddenConferenceInputs.appendChild(hiddenInput);
+            // Remove selected conference from dropdown
+            conferenceSelect.remove(conferenceSelect.selectedIndex);
         });
-    }
 
-    // Remove conference from selected list and re-add to dropdown
-    function removeConference(conferenceId) {
-        const conference = selectedConferences.find(conf => conf.id === conferenceId);
+        // Update the displayed list of selected conferences
+        function updateSelectedConferences() {
+            selectedConferencesList.innerHTML = "";
+            hiddenConferenceInputs.innerHTML = "";
 
-        // Remove from selected conferences array
-        selectedConferences = selectedConferences.filter(conf => conf.id !== conferenceId);
-        updateSelectedConferences();
+            selectedConferences.forEach(conf => {
+                // Add to the displayed list
+                const li = document.createElement("li");
+                li.textContent = `${conf.name} (Reservations: ${conf.numReservations})`;
 
-        // Re-add removed conference to dropdown
-        const option = document.createElement("option");
-        option.value = conference.id;
-        option.text = conference.name;
-        conferenceSelect.add(option);
-    }
-});
+                const removeButton = document.createElement("button");
+                removeButton.type = "button";
+                removeButton.classList.add("btn", "btn-link", "text-danger");
+                removeButton.textContent = "Remove";
+                removeButton.addEventListener("click", function() {
+                    removeConference(conf.id);
+                });
+
+                li.appendChild(removeButton);
+                selectedConferencesList.appendChild(li);
+
+                // Add hidden input fields for the conference and number of reservations
+                const hiddenInputConference = document.createElement("input");
+                hiddenInputConference.type = "hidden";
+                hiddenInputConference.name = "conference_ids[]";
+                hiddenInputConference.value = conf.id;
+                hiddenConferenceInputs.appendChild(hiddenInputConference);
+
+                const hiddenInputNumReservations = document.createElement("input");
+                hiddenInputNumReservations.type = "hidden";
+                hiddenInputNumReservations.name = `num_of_reservations[${conf.id}]`;
+                hiddenInputNumReservations.value = conf.numReservations;
+                hiddenConferenceInputs.appendChild(hiddenInputNumReservations);
+            });
+        }
+
+        // Remove conference from selected list and re-add to dropdown
+        function removeConference(conferenceId) {
+            const conference = selectedConferences.find(conf => conf.id === conferenceId);
+
+            // Remove from selected conferences array
+            selectedConferences = selectedConferences.filter(conf => conf.id !== conferenceId);
+            updateSelectedConferences();
+
+            // Re-add removed conference to dropdown
+            const option = document.createElement("option");
+            option.value = conference.id;
+            option.text = conference.originalText;
+            option.dataset.originalText = conference.originalText;
+            conferenceSelect.add(option);
+        }
+    });
 </script>
 
 @endsection

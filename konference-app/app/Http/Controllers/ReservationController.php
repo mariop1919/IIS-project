@@ -7,51 +7,75 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Reservation;
 use App\Models\Conference;
 use App\Http\Controllers\ConferenceController;
+use App\Rules\AvailableTickets;
+use Illuminate\Support\Facades\Validator;
 
 class ReservationController extends Controller
 {
     public function create()
     {
-        $conferences = Conference::all(); // Get all conferences
+        $conferences = Conference::with('reservations')->get(); // Get all conferences with reservations
         $conferenceController = new ConferenceController();
+
+        $availableTickets = [];
 
         foreach ($conferences as $conference) {
             if (!$conferenceController->checkCapacity($conference)) {
-                
                 // removing full conferences
                 $conferences = $conferences->filter(function ($conf) use ($conference) {
                     return $conf->id !== $conference->id;
                 });
             }
+            $availableTickets[$conference->id] = $conference->capacity - $conference->reservations->count();
         }
 
-        return view('reservations.CreateReservation', compact('conferences'));
+        return view('reservations.CreateReservation', compact('conferences', 'availableTickets'));
     }
 
     public function store(Request $request)
     {
         // Validate the request
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'phone' => 'required|string|max:20',
-            'conference_ids' => 'required',
+            'conference_ids' => 'required|array',
             'conference_ids.*' => 'exists:conferences,id',
+            'num_of_reservations' => 'required|array',
+            'num_of_reservations.*' => ['required', 'integer', 'min:1', 
+            function ($attribute, $value, $fail) use ($request) {
+                // Extract the index of the current reservation from the attribute name
+                preg_match('/num_of_reservations\.(\d+)/', $attribute, $matches);
+                $conference_id = $matches[1];
+                $rule = new AvailableTickets($conference_id);
+                $rule->validate($attribute, $value, $fail);
+            }],
         ]);
-        
-        // Create the reservation
-        foreach ($validated['conference_ids'] as $conference_id) {
-            Reservation::create([
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'phone' => $validated['phone'],
-                'conference_id' => $conference_id,
-                'is_paid' => false,
-                'user_id' => Auth::id(),
-            ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)  // Use default error bag
+                ->withInput();
         }
 
-        if (!Auth::check()) {
+        $validated = $validator->validated();
+
+        // Create the reservations
+        foreach ($validated['conference_ids'] as $conference_id) {
+            $numOfReservations = $validated['num_of_reservations'][$conference_id];
+            for ($i = 0; $i < $numOfReservations; $i++) {
+                Reservation::create([
+                    'name' => $validated['name'],
+                    'email' => $validated['email'],
+                    'phone' => $validated['phone'],
+                    'conference_id' => $conference_id,
+                    'is_paid' => false,
+                    'user_id' => Auth::id(),
+                ]);
+            }
+        }
+
+        if (!Auth::check()) { // Store the email in the session if the user is not authenticated
             $request->session()->put('guest_email', $validated['email']);
         }
 
