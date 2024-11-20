@@ -10,6 +10,7 @@
             @auth
                 <a href="{{ route('conferences.create') }}" class="btn btn-success">Create Conference</a>
                 <a href="{{ route('presentations.create') }}" class="btn btn-success ms-2">Create Presentation</a>
+                <a href="{{ route('conference_rooms.create') }}" class="btn btn-primary">Create Room</a>
             @endauth
             <a href="{{ route('reservations.create') }}" class="btn btn-primary ms-2">Create Reservation</a>
         </div>

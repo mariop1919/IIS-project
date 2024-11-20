@@ -49,29 +49,35 @@ class ConferenceController extends Controller
 
     // save to database
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'location' => 'required|alpha|max:255',
-            'capacity' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
-        ], [
-            // Custom error message for location field
-            'location.alpha' => 'The location field may only contain letters.',
-            'location.max' => 'The location may not be greater than 255 characters.',
-        ]);
+{
+    
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'location' => 'required|alpha|max:255',
+        'capacity' => 'required|integer|min:1',
+        'price' => 'required|numeric|min:0',
+        'start_time' => 'required|date',
+        'end_time' => 'required|date|after:start_time',
+    ], [
+        'location.alpha' => 'The location field may only contain letters.',
+        'location.max' => 'The location may not be greater than 255 characters.',
+    ]);
 
-        // create new conference
-        Conference::create([
-            'name' => $validated['name'],
-            'location' => $validated['location'],
-            'capacity' => $validated['capacity'],
-            'price' => $validated['price'],
-            'user_id' => Auth::id(), // Get the currently authenticated user's ID
-        ]);
+    // Create the conference
+    $conference = Conference::create([
+        'name' => $validated['name'],
+        'location' => $validated['location'],
+        'capacity' => $validated['capacity'],
+        'price' => $validated['price'],
+        'start_time' => $validated['start_time'],
+        'end_time' => $validated['end_time'],
+        'user_id' => Auth::id(), // Get the currently authenticated user's ID
+    ]);
 
-        return redirect()->route('home')->with('success', 'Conference created successfully!');
-    }
+    // Insert the start_time and end_time into the ConferenceRoom pivot table
+
+    return redirect()->route('home')->with('success', 'Conference created successfully!');
+}
     
     public function edit($id)
     {

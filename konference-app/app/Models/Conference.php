@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Conference extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'description', 'location', 'capacity', 'price', 'user_id'];
+    protected $fillable = [
+        'name', 'description', 'location', 'capacity', 'price', 'user_id', 'start_time', 'end_time'
+    ];
 
     public function rooms() : BelongsToMany
     {

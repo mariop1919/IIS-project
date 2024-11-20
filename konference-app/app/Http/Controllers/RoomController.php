@@ -6,48 +6,47 @@ use App\Models\Conference;
 use App\Models\Room;
 use App\Models\ConferenceRoom;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class RoomController extends Controller
 {
     // Zobrazí formulář pro přidání místnosti ke konkrétní konferenci
-    public function create(Conference $conference)
+    public function create()
     {
         // Získá všechny místnosti, které lze přidat ke konferenci
-        $rooms = Room::all();
-        return view('rooms.create', compact('conference', 'rooms'));
-    }
-
+        $user = Auth::user(); // Get the currently authenticated user
+        $conferences = Conference::where('user_id', $user->id)->get(); // Fetch user's conferences
+        return view('rooms.create', compact('conferences'));
+}
     // Uloží novou místnost přidruženou ke konferenci
-    public function store(Request $request, Conference $conference)
-    {
-        $validated = $request->validate([
-            'room_id' => 'required|exists:rooms,id',
-            'start_time' => 'required|date',
-            'end_time' => 'required|date|after:start_time',
-        ]);
+    public function store(Request $request)
+{
+    // Validate the input
+    $validated = $request->validate([
+        'conference_id' => 'required|exists:conferences,id',
+        'room_name' => 'required|string|max:255',
+        'equipment' => 'required|string|max:255',
+    ]);
 
-        // Kontrola časových kolizí v místnosti
-        $hasCollision = ConferenceRoom::where('room_id', $validated['room_id'])
-            ->where('conference_id', $conference->id)
-            ->where(function ($query) use ($validated) {
-                $query->whereBetween('start_time', [$validated['start_time'], $validated['end_time']])
-                      ->orWhereBetween('end_time', [$validated['start_time'], $validated['end_time']]);
-            })
-            ->exists();
+    // Step 1: Create a new room
+    $room = Room::create([
+        'name' => $validated['room_name'],
+        'equipment' => $validated['equipment'],
+    ]);
 
-        if ($hasCollision) {
-            return redirect()->back()->withErrors(['error' => 'Selected time conflicts with another booking in this room.']);
-        }
+    // Step 2: Find the conference using the provided conference_id
+    $conference = Conference::findOrFail($validated['conference_id']);
 
-        // Uložíme místnost do konference
-        ConferenceRoom::create([
-            'conference_id' => $conference->id, // Explicitly set the conference_id
-            'room_id' => $validated['room_id'],
-            'start_time' => $validated['start_time'],
-            'end_time' => $validated['end_time'],
-        ]);
-    
+    // Step 3: Insert the room and conference relation into the pivot table
+    // We're creating a new pivot record here, so we need to attach the room with start_time and end_time from the conference
+    $conference->rooms()->attach($room->id, [
+        'start_time' => $conference->start_time,  // Get start time from the conference
+        'end_time' => $conference->end_time,      // Get end time from the conference
+    ]);
 
-        return redirect()->route('conferences.show', $conference)->with('success', 'Room added successfully!');
-    }
+    // Step 4: Redirect back to the conference page with success message
+    return redirect()->route('conferences.show', $request->conference_id)
+        ->with('success', 'Room added successfully!');
+}
 }

@@ -14,13 +14,11 @@ class RoomSeeder extends Seeder
     {
         Room::factory()->create([
             'name' => 'Main Hall',
-            'capacity' => 200,
             'equipment' => 'Projector, Speakers',
         ]);
 
         Room::factory()->create([
             'name' => 'Conference Room A',
-            'capacity' => 100,
             'equipment' => 'Whiteboard, Laptop',
         ]);
         

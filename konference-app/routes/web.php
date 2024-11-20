@@ -28,10 +28,8 @@ Route::post('/reservations', [ReservationController::class, 'store'])->name('res
 Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
 
 Route::middleware(['auth'])->group(function () {
-    Route::prefix('conferences/{conference}')->group(function () {
-        Route::get('rooms/create', [RoomController::class, 'create'])->name('conference_rooms.create');
-        Route::post('rooms', [RoomController::class, 'store'])->name('conference_rooms.store');
-    });
+    Route::get('/conference-rooms/create', [RoomController::class, 'create'])->name('conference_rooms.create');
+    Route::post('/conference-rooms', [RoomController::class, 'store'])->name('conference_rooms.store');
 });
 
 
@@ -47,7 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/presentations/{presentation}/reject', [PresentationController::class, 'reject'])->name('presentations.reject');
     Route::get('/presentations/{presentation}/edit', [PresentationController::class, 'edit'])->name('presentations.edit');
     Route::put('/presentations/{presentation}', [PresentationController::class, 'update'])->name('presentations.update');
-    
+    Route::get('/presentations/timetable', [PresentationController::class, 'timetable'])->name('presentations.timetable');
     Route::get('/conferences/{conference_id}/reservations/manage', [ReservationController::class, 'manage'])->name('reservations.manage');
     Route::post('/reservations/{reservation}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
 });

@@ -1,5 +1,3 @@
-<!-- resources/views/layouts/app.blade.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +11,13 @@
 <header class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-light container">
         <a class="navbar-brand" href="{{ route('home') }}">Conference System</a>
-        <a href="{{ route('reservations.index') }}" class="btn btn-secondary ml-2">My Reservations</a>
+        
+        <!-- Show "My Reservations" and "Timetable" buttons for authenticated users -->
+        @auth
+            <a href="{{ route('reservations.index') }}" class="btn btn-secondary ml-2">My Reservations</a>
+            <a href="{{ route('presentations.timetable') }}" class="btn btn-secondary ml-2">Presentations Schedule</a>
+        @endauth
+        
         <div class="collapse navbar-collapse justify-content-end">
             <ul class="navbar-nav ml-auto">
                 @guest

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Room extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'capacity', 'equipment'];
+    protected $fillable = ['name', 'equipment'];
 
     public function conferences(): BelongsToMany
     {

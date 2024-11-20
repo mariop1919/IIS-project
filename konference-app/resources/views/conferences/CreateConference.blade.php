@@ -32,6 +32,16 @@
             <label for="price">Price</label>
             <input type="number" name="price" class="form-control" placeholder="Enter price" required>
         </div>
+        <div class="form-group">
+            <label for="start_time">Start Time</label>
+            <input type="datetime-local" class="form-control" id="start_time" name="start_time" required>
+        </div>
+
+        <!-- End Time -->
+        <div class="form-group">
+            <label for="end_time">End Time</label>
+            <input type="datetime-local" class="form-control" id="end_time" name="end_time" required>
+        </div>
 
         <button type="submit" class="btn btn-primary">Create Conference</button>
     </form>

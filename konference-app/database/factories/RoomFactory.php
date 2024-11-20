@@ -18,7 +18,6 @@ class RoomFactory extends Factory
     {
         return [
             'name' => $this->faker->word(),  // A single word as room name
-            'capacity' => $this->faker->numberBetween(1, 100),  // Room capacity
             'equipment' => implode(', ', $this->faker->randomElements([  // Randomly selected equipment
                 'Projector',
                 'Speakers',
