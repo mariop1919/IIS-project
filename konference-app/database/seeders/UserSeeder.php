@@ -11,14 +11,38 @@ class UserSeeder extends Seeder
      * Run the database seeds.
      */
     public function run(): void
-    {
+    {   
+        User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin1@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'admin',
+            ]);
+        User::factory()->create([
+            'name' => 'Kira Morton',
+            'email' => 'kiramorton@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'speaker',
+        ]);
+        User::factory()->create([
+            'name' => 'Rehan Oneill',
+            'email' => 'rehanoneill@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'organizer',
+        ]);
+
         User::factory()->create([
             'name' => 'John Doe',
             'email' => 'johndoe@example.com',
             'password' => bcrypt('password'),
-            'role' => 'admin',
-            'remember_token' => 'specificToken',
-            'is_registered' => 1,
+            'role' => 'guest',
         ]);
+        User::factory()->create([
+            'name' => 'Jane Doe',
+            'email' => 'janedoe@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'guest',
+        ]);
+
     }
 }

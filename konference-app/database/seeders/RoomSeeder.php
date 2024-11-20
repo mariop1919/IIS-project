@@ -13,11 +13,17 @@ class RoomSeeder extends Seeder
     public function run(): void
     {
         Room::factory()->create([
-            'name' => 'Main hall',
+            'name' => 'Main Hall',
+            'capacity' => 200,
+            'equipment' => 'Projector, Speakers',
+        ]);
+
+        Room::factory()->create([
+            'name' => 'Conference Room A',
             'capacity' => 100,
-            'equipment' => 'Projector',
+            'equipment' => 'Whiteboard, Laptop',
         ]);
         
-        Room::factory()->count(4)->create();
+        // Room::factory()->count(4)->create();
     }
 }
