@@ -104,6 +104,7 @@ class ConferenceController extends Controller
     public function destroy($id)
     {
         $conference = Conference::findOrFail($id);
+        $conference->reservations()->delete();
         $conference->delete();
 
         return redirect()->route('conferences.index')
