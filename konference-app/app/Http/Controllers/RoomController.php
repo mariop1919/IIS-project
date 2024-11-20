@@ -16,7 +16,13 @@ class RoomController extends Controller
     {
         // Získá všechny místnosti, které lze přidat ke konferenci
         $user = Auth::user(); // Get the currently authenticated user
-        $conferences = Conference::where('user_id', $user->id)->get(); // Fetch user's conferences
+        $conferences = Conference::where('user_id', $user->id)
+    ->orWhere(function ($query) use ($user) {
+        if ($user->role == 'admin') {
+            $query->whereNotNull('id'); // Match all conferences if user is an admin
+        }
+    })
+    ->get(); // Fetch user's conferences
         return view('rooms.create', compact('conferences'));
 }
     // Uloží novou místnost přidruženou ke konferenci
