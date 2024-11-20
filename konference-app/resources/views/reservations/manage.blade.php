@@ -45,6 +45,10 @@
                                     @csrf
                                     <button type="submit" class="btn btn-success btn-sm">Confirm</button>
                                 </form>
+                                <form action="{{ route('reservations.cancel', $reservation->id) }}" method="POST" style="display: inline-block;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                                </form>
                             @endif
                         </td>
                     </tr>

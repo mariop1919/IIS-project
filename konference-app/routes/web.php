@@ -49,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/presentations/timetable', [PresentationController::class, 'timetable'])->name('presentations.timetable');
     Route::get('/conferences/{conference_id}/reservations/manage', [ReservationController::class, 'manage'])->name('reservations.manage');
     Route::post('/reservations/{reservation}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
+    Route::post('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
 });
 
 Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
