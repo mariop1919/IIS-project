@@ -17,7 +17,6 @@
             <p>Conference has not been approved yet.</p>
         @endif
 
-
         <h2>Presentations</h2>
         @if($approvedPresentations->isEmpty())
             <p>No presentations available for this conference.</p>
@@ -27,6 +26,7 @@
                     <li class="list-group-item">
                         <strong>{{ $presentation->title }}</strong><br>
                         Speaker: {{ $presentation->user->name }}<br>
+                        Room: {{ $presentation->room->name }}<br>
                         Start: {{ $presentation->start_time }}<br>
                         End: {{ $presentation->end_time }}<br>
                         <p>{{ $presentation->description }}</p>
