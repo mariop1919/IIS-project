@@ -11,6 +11,18 @@ use App\Http\Controllers\AdminController;
 
 Route::get('/', [ConferenceController::class, 'index'])->name('home');
 Route::resource('conferences', ConferenceController::class);
+Route::get('/conferences', [ConferenceController::class, 'index'])->name('conferences.index');
+Route::get('/conferences/{conference}', [ConferenceController::class, 'show'])->name('conferences.show');
+Route::middleware(['auth'])->group(function (){
+    Route::get('/conferences/create', [ConferenceController::class, 'create'])->name('conferences.create');
+
+});
+Route::middleware(['conference_creator'])->group(function () {
+    Route::post('/conferences', [ConferenceController::class, 'store'])->name('conferences.store');
+    Route::get('/conferences/{conference}/edit', [ConferenceController::class, 'edit'])->name('conferences.edit');
+    Route::put('/conferences/{conference}', [ConferenceController::class, 'update'])->name('conferences.update');
+    Route::delete('/conferences/{conference}', [ConferenceController::class, 'destroy'])->name('conferences.destroy');
+});
 //Route::get('/conferences/{id}/details', [ConferenceController::class, 'details']);
 Route::get('/register', [App\Http\Controllers\RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [App\Http\Controllers\RegisterController::class, 'register']);
@@ -22,7 +34,7 @@ Route::get('/login', [App\Http\Controllers\LoginController::class, 'showLoginFor
 Route::post('/login', [App\Http\Controllers\LoginController::class, 'login']);
 
 
-Route::get('conferences/create', [ConferenceController::class, 'create'])->name('conferences.create')->middleware('auth');
+//Route::get('conferences/create', [ConferenceController::class, 'create'])->name('conferences.create')->middleware('auth');
 
 Route::get('/reservations/create', [ReservationController::class, 'create'])->name('reservations.create');
 Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');

@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'conference_creator' => \App\Http\Middleware\ConferenceCreator::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
