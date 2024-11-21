@@ -209,8 +209,9 @@ public function attendeeSchedule(Request $request)
     $formattedStartOfWeek = $startOfWeek->format('F j, Y');
     $formattedEndOfWeek = $endOfWeek->format('F j, Y');
 
-    // Fetch conferences the user has reservations for
-    $conferenceIds = $user->reservations()->pluck('conference_id');
+    $conferenceIds = DB::table('reservations')
+        ->where('user_id', $user->id)
+        ->pluck('conference_id');
 
     // Fetch presentations for those conferences within the specified week
     $presentations = Presentation::whereIn('conference_id', $conferenceIds)
@@ -227,21 +228,26 @@ public function attendeeSchedule(Request $request)
 
 public function addToPersonalSchedule(Request $request, $presentationId)
 {
-    $user = Auth::user();
+    $userId = Auth::id();
 
-    if ($user->attendingPresentations()->where('presentation_id', $presentationId)->exists()) {
+    if (DB::table('user_presentation')->where('user_id', $userId)->where('presentation_id', $presentationId)->exists()) {
         return redirect()->back()->with('error', 'Presentation is already in your personal schedule.');
     }
 
-    $user->attendingPresentations()->attach($presentationId);
+    DB::table('user_presentation')->insert([
+        'user_id' => $userId,
+        'presentation_id' => $presentationId,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
 
     return redirect()->back()->with('success', 'Presentation added to your personal schedule.');
 }
 
 public function removeFromPersonalSchedule(Request $request, Presentation $presentation)
 {
-    $user = Auth::user();
-    $user->attendingPresentations()->detach($presentation->id);
+    $userId = Auth::id();
+    DB::table('user_presentation')->where('user_id', $userId)->where('presentation_id', $presentation->id)->delete();
 
     return redirect()->route('presentations.personalSchedule')->with('success', 'Presentation removed from your personal schedule.');
 }
@@ -249,13 +255,16 @@ public function removeFromPersonalSchedule(Request $request, Presentation $prese
 public function personalSchedule(Request $request)
 {
     $user = Auth::user();
+    $userId = $user->id;
     $date = $request->input('date', now()->toDateString());
     $startOfWeek = Carbon::parse($date)->startOfWeek();
     $endOfWeek = $startOfWeek->copy()->endOfWeek();
     $formattedStartOfWeek = $startOfWeek->format('F j, Y');
     $formattedEndOfWeek = $endOfWeek->format('F j, Y');
 
-    $presentations = $user->attendingPresentations()
+    $presentationIds = DB::table('user_presentation')->where('user_id', $userId)->pluck('presentation_id');
+
+    $presentations = Presentation::whereIn('id', $presentationIds)
         ->whereBetween('start_time', [$startOfWeek, $endOfWeek])
         ->with(['room', 'user'])
         ->orderBy('start_time')
