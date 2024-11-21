@@ -35,9 +35,40 @@
                                         {{ \Carbon\Carbon::parse($presentation->end_time)->format('g:i A') }}
                                     </p>
                                     <p>Speaker: {{ $presentation->user->name }}</p>
-                                    <form action="{{ route('presentations.personalSchedule.add', $presentation->id) }}" method="POST">
+                                    <form action="{{ route('presentations.personalSchedule.add', $presentation->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         <button type="submit" class="btn btn-primary" {{ $user->attendingPresentations->contains($presentation->id) ? 'disabled' : '' }}>Add to My Schedule</button>
+                                    </form>
+                                    <!-- Button to trigger modal -->
+                                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addQuestionModal-{{ $presentation->id }}">
+                                        Add Question
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal for adding question -->
+                        <div class="modal fade" id="addQuestionModal-{{ $presentation->id }}" tabindex="-1" role="dialog" aria-labelledby="addQuestionModalLabel-{{ $presentation->id }}" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addQuestionModalLabel-{{ $presentation->id }}">Add Question to {{ $presentation->title }}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form action="{{ route('presentations.addQuestion', $presentation->id) }}" method="POST">
+                                        @csrf
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="question">Question</label>
+                                                <input type="text" name="question" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Submit Question</button>
+                                        </div>
                                     </form>
                                 </div>
                             </div>

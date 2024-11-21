@@ -29,11 +29,10 @@ class ConferenceController extends Controller
     
     public function show($id)
     {
-        $conference = Conference::with(['presentations.user', 'presentations.room'])->findOrFail($id);
+        $conference = Conference::with(['presentations.user', 'presentations.room', 'presentations.questions'])->findOrFail($id);
         $approvedPresentations = $conference->presentations->filter(function ($presentation) {
             return $presentation->status === 'approved'; // Only approved presentations
         });
-        
 
         return view('conferences.detail', compact('conference', 'approvedPresentations'));
     }

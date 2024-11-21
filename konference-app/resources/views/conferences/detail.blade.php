@@ -30,6 +30,16 @@
                         Start: {{ $presentation->start_time }}<br>
                         End: {{ $presentation->end_time }}<br>
                         <p>{{ $presentation->description }}</p>
+                        <h5>Questions:</h5>
+                        @if($presentation->questions->isEmpty())
+                            <p>No questions for this presentation.</p>
+                        @else
+                            <ul>
+                                @foreach($presentation->questions as $question)
+                                    <li>{{ $question->question }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
                     </li>
                 @endforeach
             </ul>

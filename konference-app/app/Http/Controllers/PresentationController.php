@@ -6,90 +6,91 @@ use App\Models\Conference;
 use App\Models\Presentation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\ConferenceRoom;
 use Carbon\Carbon;
+use App\Models\Question;
 use Illuminate\Support\Facades\DB;
 
 class PresentationController extends Controller
 {
-    // Show the form to create a new presentation
-    public function create()
-{
-    // Get all conferences to populate the dropdown
-    $conferences = Conference::all();
-    return view('presentations.create', compact('conferences'));
-}
-
-    // Register a new presentation for a conference
-    public function store(Request $request)
-{
-    $validated = $request->validate([
-        'conference_id' => 'required|exists:conferences,id',  // Ensure a valid conference is selected
-        'title' => 'required|string|max:255',
-        'description' => 'nullable|string',
-    ]);
-
-    // Create the presentation with status 'pending'
-    Presentation::create([
-        'title' => $validated['title'],
-        'description' => $validated['description'],
-        'conference_id' => $validated['conference_id'],
-        'user_id' => Auth::id(),
-        'status' => 'pending',  // Set the initial status to pending
-    ]);
-
-    return redirect()->route('conferences.show', $validated['conference_id'])
-        ->with('success', 'Your presentation has been submitted for approval!');
-}
-
-    // Manage presentations for the conference
-    public function manage($conference_id)
+        // Show the form to create a new presentation
+        public function create()
     {
-        // Fetch the conference
-        $conference = Conference::with('rooms')->findOrFail($conference_id);
-
-
-
-        // Ensure that the user is authorized (conference creator or admin)
-        if (Auth::user()->id !== $conference->user_id && Auth::user()->role !== 'admin') {
-            return redirect()->route('conferences.show', $conference_id)
-                ->with('error', 'You are not authorized to manage presentations.');
-        }
-
-        // Fetch all pending presentations for the conference
-        $presentations = $conference->presentations()->get();;
-
-        return view('presentations.manage', compact('conference', 'presentations'));
+        // Get all conferences to populate the dropdown
+        $conferences = Conference::all();
+        return view('presentations.create', compact('conferences'));
     }
 
-    // Approve and assign room to a presentation
-    public function approve(Request $request, $presentationId)
-{
-    $presentation = Presentation::findOrFail($presentationId);
+        // Register a new presentation for a conference
+        public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'conference_id' => 'required|exists:conferences,id',  // Ensure a valid conference is selected
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
 
-    // Validate the room_id and timeslot
-    $validated = $request->validate([
-        'room_id' => 'required|exists:rooms,id',
-        'start_time' => 'required|date',
-        'end_time' => 'required|date|after:start_time',
-    ]);
+        // Create the presentation with status 'pending'
+        Presentation::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'conference_id' => $validated['conference_id'],
+            'user_id' => Auth::id(),
+            'status' => 'pending',  // Set the initial status to pending
+        ]);
 
-    $roomId = $validated['room_id'];
-    $startTime = $validated['start_time'];
-    $endTime = $validated['end_time'];
+        return redirect()->route('conferences.show', $validated['conference_id'])
+            ->with('success', 'Your presentation has been submitted for approval!');
+    }
 
-    // Check for conflicts with other presentations in the same room
-    $conflicts = Presentation::where('room_id', $roomId)
-        ->where('status', 'approved') // Only check for approved presentations
-        ->where(function ($query) use ($startTime, $endTime) {
-            $query->whereBetween('start_time', [$startTime, $endTime])
-                  ->orWhereBetween('end_time', [$startTime, $endTime])
-                  ->orWhere(function ($query) use ($startTime, $endTime) {
-                      $query->where('start_time', '<=', $startTime)
-                            ->where('end_time', '>=', $endTime);
-                  });
-        })
-        ->exists();
+        // Manage presentations for the conference
+        public function manage($conference_id)
+        {
+            // Fetch the conference
+            $conference = Conference::with('rooms')->findOrFail($conference_id);
+
+
+
+            // Ensure that the user is authorized (conference creator or admin)
+            if (Auth::user()->id !== $conference->user_id && Auth::user()->role !== 'admin') {
+                return redirect()->route('conferences.show', $conference_id)
+                    ->with('error', 'You are not authorized to manage presentations.');
+            }
+
+            // Fetch all pending presentations for the conference
+            $presentations = $conference->presentations()->get();;
+
+            return view('presentations.manage', compact('conference', 'presentations'));
+        }
+
+        // Approve and assign room to a presentation
+        public function approve(Request $request, $presentationId)
+    {
+        $presentation = Presentation::findOrFail($presentationId);
+        $conference = $presentation->conference;
+
+        // Validate the room_id and timeslot
+        $validated = $request->validate([
+            'room_id' => 'required|exists:rooms,id',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+        ]);
+
+        $roomId = $validated['room_id'];
+        $startTime = $validated['start_time'];
+        $endTime = $validated['end_time'];
+
+        // Check for conflicts with other presentations in the same room
+        $conflicts = Presentation::where('room_id', $roomId)
+            ->where('status', 'approved') // Only check for approved presentations
+            ->where(function ($query) use ($startTime, $endTime) {
+                $query->whereBetween('start_time', [$startTime, $endTime])
+                    ->orWhereBetween('end_time', [$startTime, $endTime])
+                    ->orWhere(function ($query) use ($startTime, $endTime) {
+                        $query->where('start_time', '<=', $startTime)
+                                ->where('end_time', '>=', $endTime);
+                    });
+            })
+            ->exists();
 
     if ($conflicts) {
         return redirect()->back()->with('error', 'The selected room is already booked for another presentation during this time.');
@@ -101,7 +102,21 @@ class PresentationController extends Controller
         //dd($conferenceTimeCheck);
         return redirect()->back()->with('error', 'Presentation time must be within the conference schedule.');
     }
-    if ($presentationConflicts ) {
+    
+    $presentationConflicts = Presentation::where('room_id', $roomId)
+        ->where('status', 'approved') // Only check for approved presentations
+        ->where('id', '!=', $presentation->id)
+        ->where(function ($query) use ($startTime, $endTime) {
+            $query->whereBetween('start_time', [$startTime, $endTime])
+                  ->orWhereBetween('end_time', [$startTime, $endTime])
+                  ->orWhere(function ($query) use ($startTime, $endTime) {
+                      $query->where('start_time', '<=', $startTime)
+                            ->where('end_time', '>=', $endTime);
+                  });
+        })
+        ->exists();
+
+    if ($presentationConflicts) {
         return redirect()->back()->with('error', 'The selected room is already booked during this time.');
     }
     // Assign room and timeslot
@@ -112,35 +127,35 @@ class PresentationController extends Controller
         ],
     ]);
 
-    // Update the presentation status to 'approved'
-    $presentation->status = 'approved';
-    $presentation->room_id = $validated['room_id']; // Save the room_id directly to the presentation model
-    $presentation->start_time = $validated['start_time'];
-    $presentation->end_time = $validated['end_time'];
-    $presentation->save();
+        // Update the presentation status to 'approved'
+        $presentation->status = 'approved';
+        $presentation->room_id = $validated['room_id']; // Save the room_id directly to the presentation model
+        $presentation->start_time = $validated['start_time'];
+        $presentation->end_time = $validated['end_time'];
+        $presentation->save();
 
-    return redirect()->back()->with('success', 'Presentation approved successfully.');
-}
-public function edit($id)
-{
-    $presentation = Presentation::findOrFail($id);
-    $conference = $presentation->conference; // Fetch the associated conference
-    $rooms = $conference->rooms; // Fetch all rooms for the conference
+        return redirect()->back()->with('success', 'Presentation approved successfully.');
+    }
+    public function edit($id)
+    {
+        $presentation = Presentation::findOrFail($id);
+        $conference = $presentation->conference; // Fetch the associated conference
+        $rooms = $conference->rooms; // Fetch all rooms for the conference
 
-    return view('presentations.edit', compact('presentation', 'conference', 'rooms'));
-}
+        return view('presentations.edit', compact('presentation', 'conference', 'rooms'));
+    }
 
 public function update(Request $request, $id)
 {
     $presentation = Presentation::findOrFail($id);
     $conference = $presentation->conference;
 
-    // Validate the request
-    $validated = $request->validate([
-        'room_id' => 'required|exists:rooms,id',
-        'start_time' => 'required|date',
-        'end_time' => 'required|date|after:start_time',
-    ]);
+        // Validate the request
+        $validated = $request->validate([
+            'room_id' => 'required|exists:rooms,id',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+        ]);
 
     // Update the presentation
     
@@ -184,55 +199,55 @@ public function timetable(Request $request)
     $startOfWeek = Carbon::parse($date)->startOfWeek();
     $endOfWeek = $startOfWeek->copy()->endOfWeek();
 
-    $presentations = Presentation::where('status', 'approved')
-        ->whereBetween('start_time', [$startOfWeek, $endOfWeek])
-        ->with(['room', 'user'])
-        ->get()
-        ->groupBy(function ($presentation) {
-            return Carbon::parse($presentation->start_time)->format('l'); // Group by day name
-        });
+        $presentations = Presentation::where('status', 'approved')
+            ->whereBetween('start_time', [$startOfWeek, $endOfWeek])
+            ->with(['room', 'user'])
+            ->get()
+            ->groupBy(function ($presentation) {
+                return Carbon::parse($presentation->start_time)->format('l'); // Group by day name
+            });
 
-    return view('presentations.timetable', [
-        'presentations' => $presentations,
-        'startOfWeek' => $startOfWeek,
-        'endOfWeek' => $endOfWeek,
-        'formattedStartOfWeek' => $startOfWeek->format('F j, Y'),
-        'formattedEndOfWeek' => $endOfWeek->format('F j, Y'),
-    ]);
-}
-    public function destroy($id)
-{
-    $presentation = Presentation::findOrFail($id);
-    $presentation->delete();
+        return view('presentations.timetable', [
+            'presentations' => $presentations,
+            'startOfWeek' => $startOfWeek,
+            'endOfWeek' => $endOfWeek,
+            'formattedStartOfWeek' => $startOfWeek->format('F j, Y'),
+            'formattedEndOfWeek' => $endOfWeek->format('F j, Y'),
+        ]);
+    }
+        public function destroy($id)
+    {
+        $presentation = Presentation::findOrFail($id);
+        $presentation->delete();
 
-    return redirect()->back()->with('success', 'Presentation rejected successfully.');
-}
+        return redirect()->back()->with('success', 'Presentation rejected successfully.');
+    }
 
-public function attendeeSchedule(Request $request)
-{
-    $user = Auth::user();
-    $date = $request->input('date', now()->toDateString());
-    $startOfWeek = Carbon::parse($date)->startOfWeek();
-    $endOfWeek = $startOfWeek->copy()->endOfWeek();
-    $formattedStartOfWeek = $startOfWeek->format('F j, Y');
-    $formattedEndOfWeek = $endOfWeek->format('F j, Y');
+    public function attendeeSchedule(Request $request)
+    {
+        $user = Auth::user();
+        $date = $request->input('date', now()->toDateString());
+        $startOfWeek = Carbon::parse($date)->startOfWeek();
+        $endOfWeek = $startOfWeek->copy()->endOfWeek();
+        $formattedStartOfWeek = $startOfWeek->format('F j, Y');
+        $formattedEndOfWeek = $endOfWeek->format('F j, Y');
 
     $conferenceIds = DB::table('reservations')
         ->where('user_id', $user->id)
         ->pluck('conference_id');
 
-    // Fetch presentations for those conferences within the specified week
-    $presentations = Presentation::whereIn('conference_id', $conferenceIds)
-        ->whereBetween('start_time', [$startOfWeek, $endOfWeek])
-        ->with(['room', 'user'])
-        ->orderBy('start_time')
-        ->get()
-        ->groupBy(function ($presentation) {
-            return Carbon::parse($presentation->start_time)->format('l');
-        });
+        // Fetch presentations for those conferences within the specified week
+        $presentations = Presentation::whereIn('conference_id', $conferenceIds)
+            ->whereBetween('start_time', [$startOfWeek, $endOfWeek])
+            ->with(['room', 'user'])
+            ->orderBy('start_time')
+            ->get()
+            ->groupBy(function ($presentation) {
+                return Carbon::parse($presentation->start_time)->format('l');
+            });
 
-    return view('presentations.attendeeSchedule', compact('presentations', 'startOfWeek', 'endOfWeek', 'formattedStartOfWeek', 'formattedEndOfWeek', 'user'));
-}
+        return view('presentations.attendeeSchedule', compact('presentations', 'startOfWeek', 'endOfWeek', 'formattedStartOfWeek', 'formattedEndOfWeek', 'user'));
+    }
 
 public function addToPersonalSchedule(Request $request, $presentationId)
 {
@@ -249,16 +264,16 @@ public function addToPersonalSchedule(Request $request, $presentationId)
         'updated_at' => now(),
     ]);
 
-    return redirect()->back()->with('success', 'Presentation added to your personal schedule.');
-}
+        return redirect()->back()->with('success', 'Presentation added to your personal schedule.');
+    }
 
 public function removeFromPersonalSchedule(Request $request, Presentation $presentation)
 {
     $userId = Auth::id();
     DB::table('user_presentation')->where('user_id', $userId)->where('presentation_id', $presentation->id)->delete();
 
-    return redirect()->route('presentations.personalSchedule')->with('success', 'Presentation removed from your personal schedule.');
-}
+        return redirect()->route('presentations.personalSchedule')->with('success', 'Presentation removed from your personal schedule.');
+    }
 
 public function personalSchedule(Request $request)
 {
@@ -281,7 +296,20 @@ public function personalSchedule(Request $request)
             return Carbon::parse($presentation->start_time)->format('l');
         });
 
-    return view('presentations.personalSchedule', compact('presentations', 'startOfWeek', 'endOfWeek', 'formattedStartOfWeek', 'formattedEndOfWeek', 'user'));
-}
+        return view('presentations.personalSchedule', compact('presentations', 'startOfWeek', 'endOfWeek', 'formattedStartOfWeek', 'formattedEndOfWeek', 'user'));
+    }
 
+    public function addQuestion(Request $request, $presentationId)
+    {
+        $validated = $request->validate([
+            'question' => 'required|string|max:255',
+        ]);
+
+        $question = new Question();
+        $question->presentation_id = $presentationId;
+        $question->question = $validated['question']; // Save the question text
+        $question->save();
+
+        return redirect()->back()->with('success', 'Question added successfully.');
+    }
 }

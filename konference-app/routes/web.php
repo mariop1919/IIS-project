@@ -51,10 +51,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/conferences/{conference_id}/reservations/manage', [ReservationController::class, 'manage'])->name('reservations.manage');
     Route::post('/reservations/{reservation}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
     Route::post('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
+    
     // Attendee schedule
     Route::get('/presentations/attendeeSchedule', [PresentationController::class, 'attendeeSchedule'])->name('presentations.attendeeSchedule');
     Route::post('/presentations/{presentation}/add-to-schedule', [PresentationController::class, 'addToPersonalSchedule'])->name('personal_schedule.add');
     Route::post('/presentations/{presentation}/remove-from-schedule', [PresentationController::class, 'removeFromPersonalSchedule'])->name('personal_schedule.remove');
+    Route::post('/presentations/{presentation}/add-question', [PresentationController::class, 'addQuestion'])->name('presentations.addQuestion');
+    
     // Personal schedule
     Route::post('/presentations/{presentation}/add-to-schedule', [PresentationController::class, 'addToPersonalSchedule'])->name('presentations.personalSchedule.add');
     Route::post('/presentations/{presentation}/remove-from-schedule', [PresentationController::class, 'removeFromPersonalSchedule'])->name('presentations.personalSchedule.remove');
