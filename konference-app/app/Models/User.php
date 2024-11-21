@@ -71,9 +71,4 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Presentation::class, 'user_presentation');
     }
-
-    public function isActive()
-    {
-        return $this->is_activated;
-    }
 }

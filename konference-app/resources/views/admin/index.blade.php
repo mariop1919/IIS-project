@@ -22,7 +22,7 @@
                 <tr>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
-                    <td>{{ $user->isActive() ? 'Active' : 'Inactive' }}</td>
+                    <td>{{ $user->is_activated ? 'Active' : 'Inactive' }}</td>
                     <td>
                         <a href="{{ route('admin.edit', $user) }}" class="btn btn-warning">Edit</a>
                         <form action="{{ route('admin.destroy', $user) }}" method="POST" style="display:inline;">
@@ -30,7 +30,7 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                         </form>
-                        @if($user->isActive())
+                        @if($user->is_activated)
                             <form action="{{ route('admin.deactivate', $user) }}" method="POST" style="display:inline;">
                                 @csrf
                                 <button type="submit" class="btn btn-secondary" onclick="return confirm('Are you sure?')">Deactivate</button>
