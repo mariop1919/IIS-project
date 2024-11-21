@@ -23,8 +23,7 @@ class PresentationFactory extends Factory
         return [
             'title' => $this->faker->name(),
             'description' => $this->faker->paragraph,
-            'photo' => $this->faker->imageUrl(),
-            'logo' => $this->faker->imageUrl(),
+            'photo' => $this->getPicsumPhotoUrl(360, 360),
             'start_time' => $this->faker->dateTime(),
             'end_time' => $this->faker->dateTime(),
             'conference_id' => Conference::factory(),
@@ -53,4 +52,9 @@ class PresentationFactory extends Factory
             ];
         });
     }
+    private function getPicsumPhotoUrl(int $width, int $height): string
+    {
+        return "https://picsum.photos/{$width}/{$height}";
+    }
+    
 }

@@ -30,6 +30,7 @@
                         Start: {{ $presentation->start_time }}<br>
                         End: {{ $presentation->end_time }}<br>
                         <p>{{ $presentation->description }}</p>
+                        <img src="{{ $presentation->photo }}" alt="{{ $presentation->title }}" class="img-fluid">
                         <h5>Questions:</h5>
                         @if($presentation->questions->isEmpty())
                             <p>No questions for this presentation.</p>
