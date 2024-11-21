@@ -204,7 +204,7 @@ public function attendeeSchedule(Request $request)
 {
     $user = Auth::user();
     $date = $request->input('date', now()->toDateString());
-    $startOfWeek = \Carbon\Carbon::parse($date)->startOfWeek();
+    $startOfWeek = Carbon::parse($date)->startOfWeek();
     $endOfWeek = $startOfWeek->copy()->endOfWeek();
     $formattedStartOfWeek = $startOfWeek->format('F j, Y');
     $formattedEndOfWeek = $endOfWeek->format('F j, Y');
@@ -219,7 +219,7 @@ public function attendeeSchedule(Request $request)
         ->orderBy('start_time')
         ->get()
         ->groupBy(function ($presentation) {
-            return \Carbon\Carbon::parse($presentation->start_time)->format('l');
+            return Carbon::parse($presentation->start_time)->format('l');
         });
 
     return view('presentations.attendeeSchedule', compact('presentations', 'startOfWeek', 'endOfWeek', 'formattedStartOfWeek', 'formattedEndOfWeek', 'user'));
@@ -250,7 +250,7 @@ public function personalSchedule(Request $request)
 {
     $user = Auth::user();
     $date = $request->input('date', now()->toDateString());
-    $startOfWeek = \Carbon\Carbon::parse($date)->startOfWeek();
+    $startOfWeek = Carbon::parse($date)->startOfWeek();
     $endOfWeek = $startOfWeek->copy()->endOfWeek();
     $formattedStartOfWeek = $startOfWeek->format('F j, Y');
     $formattedEndOfWeek = $endOfWeek->format('F j, Y');
@@ -261,7 +261,7 @@ public function personalSchedule(Request $request)
         ->orderBy('start_time')
         ->get()
         ->groupBy(function ($presentation) {
-            return \Carbon\Carbon::parse($presentation->start_time)->format('l');
+            return Carbon::parse($presentation->start_time)->format('l');
         });
 
     return view('presentations.personalSchedule', compact('presentations', 'startOfWeek', 'endOfWeek', 'formattedStartOfWeek', 'formattedEndOfWeek', 'user'));
