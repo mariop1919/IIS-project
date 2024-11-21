@@ -193,13 +193,14 @@ public function update(Request $request, $id)
     return redirect()->route('presentations.manage', $presentation->conference_id)
         ->with('success', 'Presentation updated successfully!');
 }
-public function timetable(Request $request)
-{
-    $date = $request->get('date', now()->startOfWeek());
-    $startOfWeek = Carbon::parse($date)->startOfWeek();
-    $endOfWeek = $startOfWeek->copy()->endOfWeek();
+    public function timetable(Request $request)
+    {
+        $date = $request->get('date', now()->startOfWeek());
+        $startOfWeek = Carbon::parse($date)->startOfWeek();
+        $endOfWeek = $startOfWeek->copy()->endOfWeek();
 
         $presentations = Presentation::where('status', 'approved')
+            ->where('user_id', Auth::id())
             ->whereBetween('start_time', [$startOfWeek, $endOfWeek])
             ->with(['room', 'user'])
             ->get()
@@ -213,7 +214,7 @@ public function timetable(Request $request)
             'endOfWeek' => $endOfWeek,
             'formattedStartOfWeek' => $startOfWeek->format('F j, Y'),
             'formattedEndOfWeek' => $endOfWeek->format('F j, Y'),
-        ]);
+            ]);
     }
         public function destroy($id)
     {
