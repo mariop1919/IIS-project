@@ -17,21 +17,21 @@ class UserSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => bcrypt('password'),
             'role' => 'admin',
-            'is_activated' => 1,
+            'is_activated' => true,
             ]);
         User::factory()->create([
             'name' => 'Kira Morton',
             'email' => 'kiramorton@example.com',
             'password' => bcrypt('password'),
             'role' => 'speaker',
-            'is_activated' => 1,
+            'is_activated' => true,
         ]);
         User::factory()->create([
             'name' => 'Rehan Oneill',
             'email' => 'rehanoneill@example.com',
             'password' => bcrypt('password'),
             'role' => 'organizer',
-            'is_activated' => 1,
+            'is_activated' => true,
         ]);
 
         User::factory()->create([
@@ -39,14 +39,14 @@ class UserSeeder extends Seeder
             'email' => 'johndoe@example.com',
             'password' => bcrypt('password'),
             'role' => 'guest',
-            'is_activated' => 1,
+            'is_activated' => true,
         ]);
         User::factory()->create([
             'name' => 'Jane Doe',
             'email' => 'janedoe@example.com',
             'password' => bcrypt('password'),
             'role' => 'guest',
-            'is_activated' => 0,
+            'is_activated' => false,
         ]);
 
     }
