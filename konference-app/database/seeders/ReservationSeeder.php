@@ -53,6 +53,22 @@ class ReservationSeeder extends Seeder
             'is_paid' => false,
             'user_id' => 3, 
         ]);
+        Reservation::factory()->create([
+            'name' => 'admin',
+            'email' => 'admin@example.com',
+            'phone' => '987-654-321',
+            'conference_id' => 1, 
+            'is_paid' => true,
+            'user_id' => 1, 
+        ]);
+        Reservation::factory()->create([
+            'name' => 'admin',
+            'email' => 'admin@example.com',
+            'phone' => '987-654-321',
+            'conference_id' => 2, 
+            'is_paid' => true,
+            'user_id' => 1, 
+        ]);
 
 
         

@@ -200,6 +200,71 @@ public function timetable(Request $request)
     return redirect()->back()->with('success', 'Presentation rejected successfully.');
 }
 
+public function attendeeSchedule(Request $request)
+{
+    $user = Auth::user();
+    $date = $request->input('date', now()->toDateString());
+    $startOfWeek = \Carbon\Carbon::parse($date)->startOfWeek();
+    $endOfWeek = $startOfWeek->copy()->endOfWeek();
+    $formattedStartOfWeek = $startOfWeek->format('F j, Y');
+    $formattedEndOfWeek = $endOfWeek->format('F j, Y');
 
+    // Fetch conferences the user has reservations for
+    $conferenceIds = $user->reservations()->pluck('conference_id');
+
+    // Fetch presentations for those conferences within the specified week
+    $presentations = Presentation::whereIn('conference_id', $conferenceIds)
+        ->whereBetween('start_time', [$startOfWeek, $endOfWeek])
+        ->with(['room', 'user'])
+        ->orderBy('start_time')
+        ->get()
+        ->groupBy(function ($presentation) {
+            return \Carbon\Carbon::parse($presentation->start_time)->format('l');
+        });
+
+    return view('presentations.attendeeSchedule', compact('presentations', 'startOfWeek', 'endOfWeek', 'formattedStartOfWeek', 'formattedEndOfWeek', 'user'));
+}
+
+public function addToPersonalSchedule(Request $request, $presentationId)
+{
+    $user = Auth::user();
+
+    if ($user->attendingPresentations()->where('presentation_id', $presentationId)->exists()) {
+        return redirect()->back()->with('error', 'Presentation is already in your personal schedule.');
+    }
+
+    $user->attendingPresentations()->attach($presentationId);
+
+    return redirect()->back()->with('success', 'Presentation added to your personal schedule.');
+}
+
+public function removeFromPersonalSchedule(Request $request, Presentation $presentation)
+{
+    $user = Auth::user();
+    $user->attendingPresentations()->detach($presentation->id);
+
+    return redirect()->route('presentations.personalSchedule')->with('success', 'Presentation removed from your personal schedule.');
+}
+
+public function personalSchedule(Request $request)
+{
+    $user = Auth::user();
+    $date = $request->input('date', now()->toDateString());
+    $startOfWeek = \Carbon\Carbon::parse($date)->startOfWeek();
+    $endOfWeek = $startOfWeek->copy()->endOfWeek();
+    $formattedStartOfWeek = $startOfWeek->format('F j, Y');
+    $formattedEndOfWeek = $endOfWeek->format('F j, Y');
+
+    $presentations = $user->attendingPresentations()
+        ->whereBetween('start_time', [$startOfWeek, $endOfWeek])
+        ->with(['room', 'user'])
+        ->orderBy('start_time')
+        ->get()
+        ->groupBy(function ($presentation) {
+            return \Carbon\Carbon::parse($presentation->start_time)->format('l');
+        });
+
+    return view('presentations.personalSchedule', compact('presentations', 'startOfWeek', 'endOfWeek', 'formattedStartOfWeek', 'formattedEndOfWeek', 'user'));
+}
 
 }

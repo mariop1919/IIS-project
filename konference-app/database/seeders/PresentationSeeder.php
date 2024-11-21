@@ -36,6 +36,67 @@ class PresentationSeeder extends Seeder
             'user_id' => 3, 
             'status' => 'pending',
         ]);
+        Presentation::factory()->create([
+            'title' => 'Advanced PHP Techniques',
+            'description' => 'A presentation on advanced PHP techniques.',
+            'photo' => 'php.jpg',
+            'logo' => 'php_logo.png',
+            'start_time' => '2024-11-24 11:00:00',
+            'end_time' => '2024-11-24 12:00:00',
+            'conference_id' => 2, 
+            'room_id' => 2, 
+            'user_id' => 1, 
+            'status' => 'approved',
+        ]);
+        Presentation::factory()->create([
+            'title' => 'Advanced PHP Techniques',
+            'description' => 'A presentation on advanced PHP techniques.',
+            'photo' => 'php.jpg',
+            'logo' => 'php_logo.png',
+            'start_time' => '2024-11-24 12:00:00',
+            'end_time' => '2024-11-24 13:00:00',
+            'conference_id' => 2, 
+            'room_id' => 2, 
+            'user_id' => 2, 
+            'status' => 'approved',
+        ]);
+        Presentation::factory()->create([
+            'title' => 'Advanced PHP Techniques',
+            'description' => 'A presentation on advanced PHP techniques.',
+            'photo' => 'php.jpg',
+            'logo' => 'php_logo.png',
+            'start_time' => '2024-11-24 13:00:00',
+            'end_time' => '2024-11-24 14:00:00',
+            'conference_id' => 2, 
+            'room_id' => 2, 
+            'user_id' => 3, 
+            'status' => 'approved',
+        ]);
+        Presentation::factory()->create([
+            'title' => 'Advanced PHP Techniques',
+            'description' => 'A presentation on advanced PHP techniques.',
+            'photo' => 'php.jpg',
+            'logo' => 'php_logo.png',
+            'start_time' => '2024-11-23 13:00:00',
+            'end_time' => '2024-11-23 14:00:00',
+            'conference_id' => 2, 
+            'room_id' => 2, 
+            'user_id' => 3, 
+            'status' => 'approved',
+        ]);
+        Presentation::factory()->create([
+            'title' => 'Advanced PHP Techniques',
+            'description' => 'A presentation on advanced PHP techniques.',
+            'photo' => 'php.jpg',
+            'logo' => 'php_logo.png',
+            'start_time' => '2024-11-22 13:00:00',
+            'end_time' => '2024-11-22 14:00:00',
+            'conference_id' => 2, 
+            'room_id' => 2, 
+            'user_id' => 3, 
+            'status' => 'approved',
+        ]);
+        
         
         // Presentation::factory()->usingExistingConferenceAndRoom()->count(4)->create();
     }

@@ -16,6 +16,8 @@
         @auth
             <a href="{{ route('reservations.index') }}" class="btn btn-secondary ml-2">My Reservations</a>
             <a href="{{ route('presentations.timetable') }}" class="btn btn-secondary ml-2">Presentations Schedule</a>
+            <a href="{{ route('presentations.attendeeSchedule') }}" class="btn btn-secondary ml-2">Attendee Schedule</a>
+            <a href="{{ route('presentations.personalSchedule') }}" class="btn btn-secondary ml-2">My Personal Schedule</a>
         @endauth
         
         <div class="collapse navbar-collapse justify-content-end">

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -64,5 +65,10 @@ class User extends Authenticatable
     public function reservations() : HasMany
     {
         return $this->hasMany(Reservation::class);
+    }
+
+    public function attendingPresentations(): BelongsToMany
+    {
+        return $this->belongsToMany(Presentation::class, 'user_presentation');
     }
 }
