@@ -15,10 +15,11 @@ Route::get('/conferences', [ConferenceController::class, 'index'])->name('confer
 Route::get('/conferences/{conference}', [ConferenceController::class, 'show'])->name('conferences.show');
 Route::middleware(['auth'])->group(function (){
     Route::get('/conferences/create', [ConferenceController::class, 'create'])->name('conferences.create');
+    Route::post('/conferences', [ConferenceController::class, 'store'])->name('conferences.store');
 
 });
 Route::middleware(['conference_creator'])->group(function () {
-    Route::post('/conferences', [ConferenceController::class, 'store'])->name('conferences.store');
+    
     Route::get('/conferences/{conference}/edit', [ConferenceController::class, 'edit'])->name('conferences.edit');
     Route::put('/conferences/{conference}', [ConferenceController::class, 'update'])->name('conferences.update');
     Route::delete('/conferences/{conference}', [ConferenceController::class, 'destroy'])->name('conferences.destroy');

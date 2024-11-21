@@ -10,9 +10,9 @@
             <tr>
                 <th style="width: 12%;">Title</th>
                 <th style="width: 15%;">Speaker</th>
-                <th style="width: 18%;">Room</th>
-                <th style="width: 19%;">Start Time</th>
-                <th style="width: 19%;">End Time</th>
+                <th style="width: 18%;">Room <span class="text-danger">*</span></th>
+                <th style="width: 19%;">Start Time <span class="text-danger">*</span></th>
+                <th style="width: 19%;">End Time <span class="text-danger">*</span></th>
                 <th style="width: 10%;">Status</th>
                 <th style="width: 12%;">Actions</th>
             </tr>
@@ -62,7 +62,7 @@
                         <form action="{{ route('presentations.destroy', $presentation->id) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want reject presentation? It will be deleted from database.')">Reject</button>
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to reject this presentation? It will be deleted from the database.')">Reject</button>
                         </form>
                     @else
                         <a href="{{ route('presentations.edit', $presentation->id) }}" class="btn btn-warning">Edit</a>
