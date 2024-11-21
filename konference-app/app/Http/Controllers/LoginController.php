@@ -23,6 +23,14 @@ class LoginController extends Controller
 
         // attempt to login
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            if (!$user->isActive()) { // check if user is active
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Your account is deactivated.',
+                ]);
+            }
+
             $request->session()->regenerate(); // session ID 
             return redirect()->intended('/'); // redirect to main page
         }

@@ -60,14 +60,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/presentations/{presentation}/remove-from-schedule', [PresentationController::class, 'removeFromPersonalSchedule'])->name('presentations.personalSchedule.remove');
     Route::get('/presentations/personal-schedule', [PresentationController::class, 'personalSchedule'])->name('presentations.personalSchedule');
 });
-
+// Admin panel
 Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('users', [AdminController::class, 'index'])->name('index');
+    Route::get('users/add', [AdminController::class, 'add'])->name('add'); 
+    Route::post('users', [AdminController::class, 'store'])->name('store');
     Route::get('users/{user}/edit', [AdminController::class, 'edit'])->name('edit');
     Route::put('users/{user}', [AdminController::class, 'update'])->name('update');
     Route::delete('users/{user}', [AdminController::class, 'destroy'])->name('destroy');
-});
-
-Route::middleware(['auth'])->group(function () {
-    
+    Route::post('users/{user}/deactivate', [AdminController::class, 'deactivate'])->name('deactivate');
+    Route::post('users/{user}/activate', [AdminController::class, 'activate'])->name('activate');
 });

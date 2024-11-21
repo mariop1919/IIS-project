@@ -16,15 +16,6 @@
             <label for="email">Email</label>
             <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
         </div>
-        <div class="form-group">
-            <label for="role">Role</label>
-            <select name="role" class="form-control" required>
-                <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                <option value="organizer" {{ $user->role == 'organizer' ? 'selected' : '' }}>Organizer</option>
-                <option value="speaker" {{ $user->role == 'speaker' ? 'selected' : '' }}>Speaker</option>
-                <option value="guest" {{ $user->role == 'guest' ? 'selected' : '' }}>Guest</option>
-            </select>
-        </div>
         <button type="submit" class="btn btn-primary">Update User</button>
     </form>
 </div>
