@@ -94,7 +94,16 @@ class PresentationController extends Controller
     if ($conflicts) {
         return redirect()->back()->with('error', 'The selected room is already booked for another presentation during this time.');
     }
+    $conferenceTimeCheck = $startTime < $conference->start_time || $endTime > $conference->end_time;
 
+    // If there's a conflict in presentation time or the time is outside the conference range, show error
+    if ($conferenceTimeCheck) {
+        //dd($conferenceTimeCheck);
+        return redirect()->back()->with('error', 'Presentation time must be within the conference schedule.');
+    }
+    if ($presentationConflicts ) {
+        return redirect()->back()->with('error', 'The selected room is already booked during this time.');
+    }
     // Assign room and timeslot
     $presentation->conference->rooms()->syncWithoutDetaching([
         $validated['room_id'] => [
@@ -124,6 +133,7 @@ public function edit($id)
 public function update(Request $request, $id)
 {
     $presentation = Presentation::findOrFail($id);
+    $conference = $presentation->conference;
 
     // Validate the request
     $validated = $request->validate([
@@ -133,11 +143,7 @@ public function update(Request $request, $id)
     ]);
 
     // Update the presentation
-    $presentation->update([
-        'room_id' => $validated['room_id'],
-        'start_time' => $validated['start_time'],
-        'end_time' => $validated['end_time'],
-    ]);
+    
     $roomId = $validated['room_id'];
     $startTime = $validated['start_time'];
     $endTime = $validated['end_time'];
@@ -152,21 +158,23 @@ public function update(Request $request, $id)
                             ->where('end_time', '>=', $endTime);
                   });
         })
-        ->exists();
+        ->exists(); 
+    
+    $conferenceTimeCheck = $startTime < $conference->start_time || $endTime > $conference->end_time;
 
-    // $roomConflicts = DB::table('conference_room')
-    // ->where('room_id', $roomId)
-    // ->where(function ($query) use ($startTime, $endTime) {
-    //     $query->where('start_time', '>', $startTime) // Requested start time is before the room's start time
-    //           ->orWhere('end_time', '<', $endTime); // Requested end time is after the room's end time
-    // })
-    // ->exists();
-
-    // Return error if any conflict is detected
+    // If there's a conflict in presentation time or the time is outside the conference range, show error
+    if ($conferenceTimeCheck) {
+        //dd($conferenceTimeCheck);
+        return redirect()->back()->with('error', 'Presentation time must be within the conference schedule.');
+    }
     if ($presentationConflicts ) {
         return redirect()->back()->with('error', 'The selected room is already booked during this time.');
     }
-
+    $presentation->update([
+        'room_id' => $validated['room_id'],
+        'start_time' => $validated['start_time'],
+        'end_time' => $validated['end_time'],
+    ]);
     return redirect()->route('presentations.manage', $presentation->conference_id)
         ->with('success', 'Presentation updated successfully!');
 }

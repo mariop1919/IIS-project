@@ -34,15 +34,8 @@ class ConferenceController extends Controller
             return $presentation->status === 'approved'; // Only approved presentations
         });
         
-        $pivotData = DB::table('conference_room')
-            ->where('conference_id', $id)
-            ->select('start_time', 'end_time')
-            ->first();
 
-        $startTime = $pivotData ? $pivotData->start_time : null;
-        $endTime = $pivotData ? $pivotData->end_time : null;
-
-        return view('conferences.detail', compact('conference', 'approvedPresentations', 'startTime', 'endTime'));
+        return view('conferences.detail', compact('conference', 'approvedPresentations'));
     }
 
     public function create()

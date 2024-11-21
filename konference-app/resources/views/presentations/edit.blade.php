@@ -3,6 +3,11 @@
 @section('content')
     <div class="container">
         <h1>Edit Presentation: {{ $presentation->title }}</h1>
+        @if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
 
         <form action="{{ route('presentations.update', $presentation->id) }}" method="POST">
             @csrf

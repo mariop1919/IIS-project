@@ -10,12 +10,13 @@
         <p><strong>Capacity:</strong> {{ $conference->capacity }}</p>
         <p><strong>Price:</strong> ${{ $conference->price }}</p>
 
-        @if($startTime && $endTime)
-            <p><strong>Start Time:</strong> {{ $startTime }}</p>
-            <p><strong>End Time:</strong> {{ $endTime }}</p>
+        @if($conference->start_time && $conference->end_time)
+            <p><strong>Start Time:</strong> {{ $conference->start_time }}</p>
+            <p><strong>End Time:</strong> {{ $conference->end_time }}</p>
         @else
-            <p>Conference has not been approoved yet.</p>
+            <p>Conference has not been approved yet.</p>
         @endif
+
 
         <h2>Presentations</h2>
         @if($approvedPresentations->isEmpty())
