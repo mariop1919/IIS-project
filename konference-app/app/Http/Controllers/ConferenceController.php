@@ -57,7 +57,7 @@ class ConferenceController extends Controller
         'name' => 'required|string|max:255',
         'location' => 'nullable|alpha|max:255', // `nullable` means this field is optional
         'capacity' => 'required|integer|min:1',
-        'price' => 'required|numeric|min:0',
+        'price' => 'nullable|numeric|min:0',
         'start_time' => 'required|date|after_or_equal:now',
         'end_time' => 'required|date|after:start_time',
     ], [
@@ -68,11 +68,11 @@ class ConferenceController extends Controller
     ]);
 
     // Create the conference
-    $conference = Conference::create([
+    Conference::create([
         'name' => $validated['name'],
         'location' => $validated['location'],
         'capacity' => $validated['capacity'],
-        'price' => $validated['price'],
+        'price' => $validated['price'] ?? 0.00, // Default to 0.00 if not provided
         'start_time' => $validated['start_time'],
         'end_time' => $validated['end_time'],
         'user_id' => Auth::id(),

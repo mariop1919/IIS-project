@@ -14,25 +14,25 @@
         <!-- Name -->
         <div class="form-group">
             <label for="name">Name <span class="text-danger">*</span></label>
-            <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required>
+            <input type="text" id="name" name="name" class="form-control" placeholder="Enter conference name" value="{{ old('name') }}" required>
         </div>
     
         <!-- Location (Optional) -->
         <div class="form-group">
             <label for="location">Location</label>
-            <input type="text" id="location" name="location" class="form-control" value="{{ old('location') }}">
+            <input type="text" id="location" name="location" class="form-control" placeholder="Enter location (optional)" value="{{ old('location') }}">
         </div>
     
         <!-- Capacity -->
         <div class="form-group">
             <label for="capacity">Capacity <span class="text-danger">*</span></label>
-            <input type="number" id="capacity" name="capacity" class="form-control" value="{{ old('capacity') }}" required>
+            <input type="number" id="capacity" name="capacity" class="form-control" placeholder="Enter capacity" value="{{ old('capacity') }}" required>
         </div>
     
         <!-- Price -->
         <div class="form-group">
-            <label for="price">Price <span class="text-danger">*</span></label>
-            <input type="number" id="price" name="price" class="form-control" value="{{ old('price') }}" required>
+            <label for="price">Price</label>
+            <input type="number" id="price" name="price" class="form-control" placeholder="Enter price (default value is 0.00)" value="{{ old('price') }}">
         </div>
     
         <!-- Start Time -->

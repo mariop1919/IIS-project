@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('location');
-            $table->decimal('price', 8, 2);
+            $table->decimal('price', 8, 2)->default(0.00);
             $table->integer('capacity');
             $table->timestamps();
         });
