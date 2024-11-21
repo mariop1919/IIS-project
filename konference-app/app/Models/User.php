@@ -20,13 +20,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
 
-    // TO DO: delete 'is_registered' from the fillable array
+    // TO DO: delete 'is_activated' from the fillable array
     protected $fillable = [
         'name',
         'email',
         'password',
         'role',
-        'is_registered',
+        'is_activated',
     ];
 
     /**
@@ -74,6 +74,6 @@ class User extends Authenticatable
 
     public function isActive()
     {
-        return $this->is_registered;
+        return $this->is_activated;
     }
 }

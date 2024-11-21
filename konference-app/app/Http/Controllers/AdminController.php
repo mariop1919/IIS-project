@@ -33,7 +33,7 @@ class AdminController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
-            'is_registered' => 1,
+            'is_activated' => 1,
         ]);
 
         return redirect()->route('admin.index')->with('success', 'User added successfully.');
@@ -64,13 +64,13 @@ class AdminController extends Controller
 
     public function deactivate(User $user)
     {
-        $user->update(['is_registered' => 0]);
+        $user->update(['is_activated' => 0]);
         return redirect()->route('admin.index')->with('success', 'User deactivated successfully.');
     }
 
     public function activate(User $user)
     {
-        $user->update(['is_registered' => 1]);
+        $user->update(['is_activated' => 1]);
         return redirect()->route('admin.index')->with('success', 'User activated successfully.');
     }
 }
