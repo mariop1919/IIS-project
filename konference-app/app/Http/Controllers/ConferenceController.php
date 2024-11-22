@@ -83,9 +83,9 @@ class ConferenceController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
+            'location' => 'nullable|string|max:255',
             'capacity' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
+            'price' => 'nullable|numeric|min:0',
         ]);
 
         $conference = Conference::findOrFail($id);
