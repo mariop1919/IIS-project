@@ -48,8 +48,8 @@ class ConferenceController extends Controller
     $validated = $request->validate([
         'name' => 'required|string|max:255',
         'location' => 'nullable|alpha|max:255', // `nullable` means this field is optional
-        'capacity' => 'required|integer|min:1',
-        'price' => 'nullable|numeric|min:0',
+        'capacity' => 'required|integer|min:1|max:10000',
+        'price' => 'nullable|numeric|min:0|max:100000',
         'start_time' => 'required|date|after_or_equal:now',
         'end_time' => 'required|date|after:start_time',
     ], [
@@ -84,8 +84,8 @@ class ConferenceController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'nullable|string|max:255',
-            'capacity' => 'required|integer|min:1',
-            'price' => 'nullable|numeric|min:0',
+            'capacity' => 'required|integer|min:1|max:10000',
+            'price' => 'nullable|numeric|min:0|max:100000',
         ]);
 
         $conference = Conference::findOrFail($id);
