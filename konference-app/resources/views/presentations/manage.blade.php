@@ -3,7 +3,11 @@
 @section('content')
 <div class="container-fluid">
     <h1>Manage Presentations for {{ $conference->name }}</h1>
-
+    @if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+    @endif
     <!-- List of presentations -->
     <table class="table table-bordered" style="width: 100%; table-layout: fixed;">
         <thead>

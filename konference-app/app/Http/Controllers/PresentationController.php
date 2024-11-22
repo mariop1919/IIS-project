@@ -47,7 +47,7 @@ class PresentationController extends Controller
         {
             // Fetch the conference
             $conference = Conference::with('rooms')->findOrFail($conference_id);
-
+            
 
 
             // Ensure that the user is authorized (conference creator or admin)
@@ -67,6 +67,7 @@ class PresentationController extends Controller
     {
         $presentation = Presentation::findOrFail($presentationId);
         $conference = $presentation->conference;
+        
 
         // Validate the room_id and timeslot
         $validated = $request->validate([
@@ -91,41 +92,23 @@ class PresentationController extends Controller
                     });
             })
             ->exists();
+        $conferenceTimeCheck = $startTime < $conference->start_time || $endTime > $conference->end_time;
 
-    if ($conflicts) {
-        return redirect()->back()->with('error', 'The selected room is already booked for another presentation during this time.');
-    }
-    $conferenceTimeCheck = $startTime < $conference->start_time || $endTime > $conference->end_time;
+        // If there's a conflict in presentation time or the time is outside the conference range, show error
+        if ($conferenceTimeCheck) {
+            return redirect()->back()->with('error', 'Presentation time must be within the conference schedule.');
+        }
 
-    // If there's a conflict in presentation time or the time is outside the conference range, show error
-    if ($conferenceTimeCheck) {
-        //dd($conferenceTimeCheck);
-        return redirect()->back()->with('error', 'Presentation time must be within the conference schedule.');
-    }
-    
-    $presentationConflicts = Presentation::where('room_id', $roomId)
-        ->where('status', 'approved') // Only check for approved presentations
-        ->where('id', '!=', $presentation->id)
-        ->where(function ($query) use ($startTime, $endTime) {
-            $query->whereBetween('start_time', [$startTime, $endTime])
-                  ->orWhereBetween('end_time', [$startTime, $endTime])
-                  ->orWhere(function ($query) use ($startTime, $endTime) {
-                      $query->where('start_time', '<=', $startTime)
-                            ->where('end_time', '>=', $endTime);
-                  });
-        })
-        ->exists();
-
-    if ($presentationConflicts) {
-        return redirect()->back()->with('error', 'The selected room is already booked during this time.');
-    }
+        if ($conflicts) {
+            return redirect()->back()->with('error', 'The selected room is already booked for another presentation during this time.');
+        }
     // Assign room and timeslot
-    $presentation->conference->rooms()->syncWithoutDetaching([
+        $presentation->conference->rooms()->syncWithoutDetaching([
         $validated['room_id'] => [
             'start_time' => $validated['start_time'],
             'end_time' => $validated['end_time'],
-        ],
-    ]);
+            ],
+        ]);
 
         // Update the presentation status to 'approved'
         $presentation->status = 'approved';
