@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             ReservationSeeder::class,
             PresentationSeeder::class,
             ConferenceRoomSeeder::class,
-            // TO DO: add QuestionSeeder
+            QuestionSeeder::class,
         ]);
     }
 }
