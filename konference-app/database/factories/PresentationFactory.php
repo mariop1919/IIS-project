@@ -30,12 +30,14 @@ class PresentationFactory extends Factory
         $maxEndTime = $conference->end_time;
         $endTime = $this->faker->dateTimeBetween($startTime, $maxEndTime);
 
+        $uniqueIndex = $this->faker->unique()->numberBetween(1, 100);
+        $photoUrl = $this->getStaticPicsumPhotoUrl($uniqueIndex);
 
         // already uses existing conference, room and user
         return [
             'title' => $this->faker->name(),
             'description' => $this->faker->paragraph,
-            'photo' => $this->getPicsumPhotoUrl(360, 360),
+            'photo' => $photoUrl,
             'start_time' => $startTime,
             'end_time' => $endTime,
             'conference_id' => $conference->id,
@@ -45,9 +47,8 @@ class PresentationFactory extends Factory
         ];
     }
 
-    private function getPicsumPhotoUrl(int $width, int $height): string
+    private function getStaticPicsumPhotoUrl(int $index): string
     {
-        $uniqueId = uniqid();
-        return "https://picsum.photos/{$width}/{$height}?random={$uniqueId}";
+        return "https://picsum.photos/360/360?image={$index}";
     }
 }

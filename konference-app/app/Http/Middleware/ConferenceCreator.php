@@ -28,7 +28,6 @@ class ConferenceCreator
             
             return $next($request); // Allow the user to continue
         }
-        dd($conferenceId);
 
         // Redirect with an error if not authorized
         return redirect()->route('home')->with('error', 'You do not have permission to access this conference.');

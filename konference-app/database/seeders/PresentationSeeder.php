@@ -13,6 +13,6 @@ class PresentationSeeder extends Seeder
     public function run(): void
     {
         
-        Presentation::factory()->count(100)->create();
+        Presentation::factory()->count(20)->create();
     }
 }

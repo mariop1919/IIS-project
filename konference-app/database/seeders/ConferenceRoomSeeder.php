@@ -14,6 +14,6 @@ class ConferenceRoomSeeder extends Seeder
      */
     public function run(): void
     {
-        ConferenceRoom::factory()->usingExistingConferenceAndRoom()->count(4)->create();
+        ConferenceRoom::factory()->usingExistingConferenceAndRoom()->count(10)->create();
     }
 }

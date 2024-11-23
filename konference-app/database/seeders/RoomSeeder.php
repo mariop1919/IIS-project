@@ -14,14 +14,52 @@ class RoomSeeder extends Seeder
     {
         Room::factory()->create([
             'name' => 'Main Hall',
-            'equipment' => 'Projector, Speakers',
+            'equipment' => Room::factory()->make()->equipment,
         ]);
 
         Room::factory()->create([
             'name' => 'Conference Room A',
-            'equipment' => 'Whiteboard, Laptop',
+            'equipment' => Room::factory()->make()->equipment,
         ]);
         
-        Room::factory()->count(10)->create();
+        Room::factory()->create([
+            'name' => 'Meeting Room 1',
+            'equipment' => Room::factory()->make()->equipment,
+        ]);
+        
+        Room::factory()->create([
+            'name' => 'Workshop Area',
+            'equipment' => Room::factory()->make()->equipment,
+        ]);
+        
+        Room::factory()->create([
+            'name' => 'Seminar Hall',
+            'equipment' => Room::factory()->make()->equipment,
+        ]);
+        
+        Room::factory()->create([
+            'name' => 'Breakout Room',
+            'equipment' => Room::factory()->make()->equipment,
+        ]);
+        
+        Room::factory()->create([
+            'name' => 'Training Room',
+            'equipment' => Room::factory()->make()->equipment,
+        ]);
+        
+        Room::factory()->create([
+            'name' => 'Discussion Room',
+            'equipment' => Room::factory()->make()->equipment,
+        ]);
+        
+        Room::factory()->create([
+            'name' => 'Lecture Hall',
+            'equipment' => Room::factory()->make()->equipment,
+        ]);
+        
+        Room::factory()->create([
+            'name' => 'Board Room',
+            'equipment' => Room::factory()->make()->equipment,
+        ]);        
     }
 }

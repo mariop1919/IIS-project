@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Conference;
 use App\Models\Room;
+use Exception;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ConferenceRoom>
@@ -27,19 +28,25 @@ class ConferenceRoomFactory extends Factory
     }
 
     public function usingExistingConferenceAndRoom()
-    {
-        return $this->state(function (array $attributes) {
-            // Fetch an existing conference and room
-            $conference = Conference::inRandomOrder()->first();
-            $room = Room::inRandomOrder()->first();
+{
+    return $this->state(function (array $attributes) {
+        $conference = Conference::inRandomOrder()->first();
 
-            // Use the exact start and end times of the conference
-            return [
-                'conference_id' => $conference->id,
-                'room_id' => $room->id,
-                'start_time' => $conference->start_time,
-                'end_time' => $conference->end_time,
-            ];
-        });
-    }
+        // Find a room that hasn't been used for this conference yet
+        $usedRoomIds = $conference->rooms->pluck('id')->toArray(); // Adjust based on your relationship setup
+        $room = Room::whereNotIn('id', $usedRoomIds)->inRandomOrder()->first();
+
+        if (!$room) {
+            throw new Exception('No available rooms for this conference.');
+        }
+
+        return [
+            'conference_id' => $conference->id,
+            'room_id' => $room->id,
+            'start_time' => $conference->start_time,
+            'end_time' => $conference->end_time,
+        ];
+    });
+}
+
 }
