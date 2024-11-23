@@ -307,4 +307,25 @@ public function personalSchedule(Request $request)
 
         return redirect()->back()->with('success', 'Question added successfully.');
     }
+
+    public function showLeaderboard(Request $request)
+    {
+        // Get all conferences for the dropdown
+        $conferences = Conference::all();
+
+        // Check if a specific conference was selected
+        $selectedConferenceId = $request->input('conference_id');
+        $presentations = [];
+
+        if ($selectedConferenceId) {
+            // Retrieve presentations for the selected conference, ordered by votes
+            $presentations = Presentation::where('conference_id', $selectedConferenceId)
+                ->where('status', 'approved')
+                ->withCount('votedUsers') // Assuming votedUsers relation is set up
+                ->orderByDesc('voted_users_count')
+                ->get();
+        }
+
+        return view('presentations.leaderboard', compact('conferences', 'presentations', 'selectedConferenceId'));
+    }
 }

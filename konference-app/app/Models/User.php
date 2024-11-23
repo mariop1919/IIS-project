@@ -71,4 +71,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Presentation::class, 'user_presentation');
     }
+    public function votedPresentations()
+    {
+    return $this->belongsToMany(Presentation::class, 'votes')->withTimestamps();
+    }
 }

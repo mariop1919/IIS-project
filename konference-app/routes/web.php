@@ -8,9 +8,9 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\PresentationController;
 use App\Http\Controllers\AdminController;
-
+use App\Http\Controllers\VoteController;
 Route::get('/', [ConferenceController::class, 'index'])->name('home');
-Route::resource('conferences', ConferenceController::class);
+//Route::resource('conferences', ConferenceController::class);
 Route::get('/conferences', [ConferenceController::class, 'index'])->name('conferences.index');
 Route::get('/conferences/{conference}', [ConferenceController::class, 'show'])->name('conferences.show');
 Route::middleware(['auth'])->group(function (){
@@ -34,6 +34,9 @@ Route::middleware(['auth'])->group(function (){
     Route::post('/presentations/{presentation}/remove-from-schedule', [PresentationController::class, 'removeFromPersonalSchedule'])->name('presentations.personalSchedule.remove');
     Route::get('/presentations/personal-schedule', [PresentationController::class, 'personalSchedule'])->name('presentations.personalSchedule');
 
+    Route::get('/presentations/leaderboard', [PresentationController::class, 'showLeaderboard'])->name('presentations.leaderboard');    //voting for best presentation
+    Route::post('/presentations/{presentation}/vote', [VoteController::class, 'vote'])->name('presentations.vote');
+    Route::delete('/presentations/{presentation}/unvote', [VoteController::class, 'unvote'])->name('presentations.unvote');
 });
 Route::middleware(['conference_creator'])->group(function () {
     
@@ -50,7 +53,10 @@ Route::middleware(['conference_creator'])->group(function () {
     Route::get('/conferences/{conference}/reservations/manage', [ReservationController::class, 'manage'])->name('reservations.manage');  //reservation manage
     Route::post('/reservations/{conference}/{reservation}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
     Route::post('/reservations/{conference}/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
+
+    
 });
+
 //Route::get('/conferences/{id}/details', [ConferenceController::class, 'details']);
 Route::get('/register', [App\Http\Controllers\RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [App\Http\Controllers\RegisterController::class, 'register']);

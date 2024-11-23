@@ -35,14 +35,34 @@
                                         {{ \Carbon\Carbon::parse($presentation->end_time)->format('g:i A') }}
                                     </p>
                                     <p>Speaker: {{ $presentation->user->name }}</p>
+                                    
+                                    <!-- Add to My Schedule Button -->
                                     <form action="{{ route('presentations.personalSchedule.add', $presentation->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         <button type="submit" class="btn btn-primary" {{ $user->attendingPresentations->contains($presentation->id) ? 'disabled' : '' }}>Add to My Schedule</button>
                                     </form>
-                                    <!-- Button to trigger modal -->
+
+                                    <!-- Vote Button -->
+                                    @if ($user->votedPresentations->contains($presentation->id))
+                                    <!-- Unvote Form -->
+                                    <form action="{{ route('presentations.unvote', $presentation->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE') <!-- Makes it a DELETE request -->
+                                        <button type="submit" class="btn btn-danger">Unvote</button>
+                                    </form>
+                                    @else
+                                    <!-- Vote Form -->
+                                    <form action="{{ route('presentations.vote', $presentation->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success">Vote</button>
+                                    </form>
+                                    @endif
+
+                                    <!-- Button to trigger Add Question modal -->
                                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addQuestionModal-{{ $presentation->id }}">
                                         Add Question
                                     </button>
+                                    
                                 </div>
                             </div>
                         </div>

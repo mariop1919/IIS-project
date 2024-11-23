@@ -37,4 +37,9 @@ class Presentation extends Model
     {
         return $this->hasMany(Question::class);
     }
+
+    public function votedUsers()
+    {
+        return $this->belongsToMany(User::class, 'votes');
+    }
 }
