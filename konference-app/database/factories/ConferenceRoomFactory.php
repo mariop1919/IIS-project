@@ -29,9 +29,16 @@ class ConferenceRoomFactory extends Factory
     public function usingExistingConferenceAndRoom()
     {
         return $this->state(function (array $attributes) {
+            // Fetch an existing conference and room
+            $conference = Conference::inRandomOrder()->first();
+            $room = Room::inRandomOrder()->first();
+
+            // Use the exact start and end times of the conference
             return [
-                'conference_id' => Conference::inRandomOrder()->first()->id,
-                'room_id' => Room::inRandomOrder()->first()->id,
+                'conference_id' => $conference->id,
+                'room_id' => $room->id,
+                'start_time' => $conference->start_time,
+                'end_time' => $conference->end_time,
             ];
         });
     }

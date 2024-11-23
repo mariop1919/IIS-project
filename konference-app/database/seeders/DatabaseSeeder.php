@@ -15,11 +15,11 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,
-            RoomSeeder::class,
             ConferenceSeeder::class,
+            RoomSeeder::class,
+            ConferenceRoomSeeder::class,
             ReservationSeeder::class,
             PresentationSeeder::class,
-            ConferenceRoomSeeder::class,
             QuestionSeeder::class,
         ]);
     }

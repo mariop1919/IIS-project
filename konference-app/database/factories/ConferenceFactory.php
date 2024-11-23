@@ -17,14 +17,16 @@ class ConferenceFactory extends Factory
      */
     public function definition(): array
     {
+        $startTime = $this->faker->dateTimeBetween('now', '+2weeks');
+        $endTime = (clone $startTime)->modify('+'.rand(4, 48).' hours');
         return [
             'name' => $this->faker->name(),
             'description' => $this->faker->text(),
             'location' => $this->faker->address(),
             'capacity' => $this->faker->numberBetween(1, 100),
             'price' => $this->faker->randomFloat(2, 0, 100000),
-            'start_time' => $this->faker->dateTime(),
-            'end_time' => $this->faker->dateTime(),
+            'start_time' => $startTime,
+            'end_time' => $endTime,
             'user_id' => User::factory(),
         ];
     }

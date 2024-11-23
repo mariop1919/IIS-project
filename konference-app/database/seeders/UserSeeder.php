@@ -48,7 +48,5 @@ class UserSeeder extends Seeder
             'role' => 'guest',
             'is_activated' => false,
         ]);
-
-        User::factory()->count(20)->create();
     }
 }

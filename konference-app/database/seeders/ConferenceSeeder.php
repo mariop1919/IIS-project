@@ -18,8 +18,8 @@ class ConferenceSeeder extends Seeder
             'location' => 'Brno',
             'capacity' => 100,
             'price' => 22.22,
-            'start_time' => '2022-04-04 00:00:00',
-            'end_time' => '2022-04-04 18:00:00',
+            'start_time' => '2024-11-27 16:00:00',
+            'end_time' => '2024-11-29 18:00:00',
             'user_id' => 3, 
         ]);
 
@@ -29,8 +29,8 @@ class ConferenceSeeder extends Seeder
             'location' => 'Prague',
             'capacity' => 200,
             'price' => 30.00,
-            'start_time' => '2022-03-03 00:00:00',
-            'end_time' => '2022-03-03 18:00:00',
+            'start_time' => '2024-12-01 11:00:00',
+            'end_time' => '2024-12-02 18:30:00',
             'user_id' => 3, 
         ]);
         Conference::factory()->create([
@@ -39,8 +39,8 @@ class ConferenceSeeder extends Seeder
             'location' => 'Bratislava',
             'capacity' => 0,
             'price' => 50.00,
-            'start_time' => '2022-02-02 00:00:00',
-            'end_time' => '2022-02-02 18:00:00',
+            'start_time' => '2024-11-27 14:00:00',
+            'end_time' => '2024-11-29 18:30:00',
             'user_id' => 3, 
         ]);
         

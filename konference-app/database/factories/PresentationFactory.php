@@ -20,41 +20,34 @@ class PresentationFactory extends Factory
      */
     public function definition(): array
     {
+
+        //get a random conference
+        $conference = Conference::inRandomOrder()->first();
+
+        // Ensure that the start and end time of the presentation are within the conference times
+        $startTime = $this->faker->dateTimeBetween($conference->start_time, $conference->end_time);
+        
+        $maxEndTime = $conference->end_time;
+        $endTime = $this->faker->dateTimeBetween($startTime, $maxEndTime);
+
+
+        // already uses existing conference, room and user
         return [
             'title' => $this->faker->name(),
             'description' => $this->faker->paragraph,
             'photo' => $this->getPicsumPhotoUrl(360, 360),
-            'start_time' => $this->faker->dateTime(),
-            'end_time' => $this->faker->dateTime(),
-            'conference_id' => Conference::factory(),
-            'room_id' => Room::factory(),
-            'user_id' => $this->getExistingRecordId(User::class),
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'conference_id' => $conference->id,
+            'room_id' => Room::inRandomOrder()->first()->id,
+            'user_id' => User::inRandomOrder()->first()->id,
             'status' => $this->faker->boolean ? 'approved' : 'pending',
         ];
     }
 
-    private function getExistingRecordId(string $table): int
-    {
-        $record = $table::inRandomOrder()->first();
-
-        if(!$record) {
-            throw new Exception("No records found in the $table table, please create some records first.");
-        }
-        return $record->id;
-    }
-
-    public function usingExistingConferenceAndRoom()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'conference_id' => Conference::inRandomOrder()->first()->id,
-                'room_id' => Room::inRandomOrder()->first()->id,
-            ];
-        });
-    }
     private function getPicsumPhotoUrl(int $width, int $height): string
     {
-        return "https://picsum.photos/{$width}/{$height}";
+        $uniqueId = uniqid();
+        return "https://picsum.photos/{$width}/{$height}?random={$uniqueId}";
     }
-    
 }

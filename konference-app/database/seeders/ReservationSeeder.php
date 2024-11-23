@@ -55,7 +55,7 @@ class ReservationSeeder extends Seeder
             'user_id' => 1, 
         ]);
 
-        $this->createReservationsWithCapacityCheck(200);
+        $this->createReservationsWithCapacityCheck(100);
     }
 
 
