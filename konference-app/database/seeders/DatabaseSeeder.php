@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             ReservationSeeder::class,
             PresentationSeeder::class,
             QuestionSeeder::class,
+            VoteSeeder::class
         ]);
     }
 }

@@ -21,6 +21,7 @@ class DeleteSeedsSeeder extends Seeder
         DB::table('reservations')->truncate();
         DB::table('presentations')->truncate();
         DB::table('questions')->truncate();
+        DB::table('votes')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

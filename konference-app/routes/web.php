@@ -10,7 +10,7 @@ use App\Http\Controllers\PresentationController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\VoteController;
 Route::get('/', [ConferenceController::class, 'index'])->name('home');
-//Route::resource('conferences', ConferenceController::class);
+Route::resource('conferences', ConferenceController::class);
 Route::get('/conferences', [ConferenceController::class, 'index'])->name('conferences.index');
 Route::get('/conferences/{conference}', [ConferenceController::class, 'show'])->name('conferences.show');
 Route::middleware(['auth'])->group(function (){
@@ -57,15 +57,28 @@ Route::middleware(['conference_creator'])->group(function () {
     
 });
 
+Route::get('/register', [App\Http\Controllers\RegisterController::class, 'showRegistrationForm'])
+    ->name('register')
+    ->middleware('guest'); // Only unauthenticated users can access
+
+Route::post('/register', [App\Http\Controllers\RegisterController::class, 'register'])
+    ->middleware('guest'); // Only unauthenticated users can access
+
+// Login Routes
+Route::get('/login', [App\Http\Controllers\LoginController::class, 'showLoginForm'])
+    ->name('login')
+    ->middleware('guest'); // Only unauthenticated users can access
+
+Route::post('/login', [App\Http\Controllers\LoginController::class, 'login'])
+    ->middleware('guest'); // Only unauthenticated users can access
+
 //Route::get('/conferences/{id}/details', [ConferenceController::class, 'details']);
-Route::get('/register', [App\Http\Controllers\RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [App\Http\Controllers\RegisterController::class, 'register']);
+
 Route::post('/logout', function () {
     Auth::logout();
     return redirect('/');  //Redirect to home page after logout
 })->name('logout');
-Route::get('/login', [App\Http\Controllers\LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [App\Http\Controllers\LoginController::class, 'login']);
+
 
 
 //Route::get('conferences/create', [ConferenceController::class, 'create'])->name('conferences.create')->middleware('auth');
