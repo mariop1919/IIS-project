@@ -27,12 +27,14 @@ class PresentationController extends Controller
             'conference_id' => 'required|exists:conferences,id',  // Ensure a valid conference is selected
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'photo' => 'nullable|url',
         ]);
 
         // Create the presentation with status 'pending'
         Presentation::create([
             'title' => $validated['title'],
             'description' => $validated['description'],
+            'photo' => $validated['photo'],
             'conference_id' => $validated['conference_id'],
             'user_id' => Auth::id(),
             'status' => 'pending',  // Set the initial status to pending
@@ -130,6 +132,7 @@ class PresentationController extends Controller
         $presentation = Presentation::findOrFail($id);
         $conference = $presentation->conference; // Fetch the associated conference
         $rooms = $conference->rooms; // Fetch all rooms for the conference
+        $photo = $presentation->photo;
 
         return view('presentations.edit', compact('presentation', 'conference', 'rooms'));
     }
@@ -144,6 +147,7 @@ public function update(Request $request,$conference_id, $id)
             'room_id' => 'required|exists:rooms,id',
             'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',
+            'photo' => 'nullable|url',
         ]);
 
     // Update the presentation
@@ -151,6 +155,7 @@ public function update(Request $request,$conference_id, $id)
     $roomId = $validated['room_id'];
     $startTime = $validated['start_time'];
     $endTime = $validated['end_time'];
+    $photo = $validated['photo'] ?? $presentation->photo;
     $presentationConflicts = Presentation::where('room_id', $roomId)
         ->where('status', 'approved') // Only check for approved presentations
         ->where('id', '!=', $presentation->id)
@@ -183,6 +188,7 @@ public function update(Request $request,$conference_id, $id)
         'room_id' => $validated['room_id'],
         'start_time' => $validated['start_time'],
         'end_time' => $validated['end_time'],
+        'photo' => $photo,
     ]);
     return redirect()->route('presentations.manage', $presentation->conference_id)
         ->with('success', 'Presentation updated successfully!');

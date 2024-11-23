@@ -1,5 +1,7 @@
 @extends('layouts.layout')
 
+@section('title', 'Edit Presentation')
+
 @section('content')
     <div class="container">
         <h1>Edit Presentation: {{ $presentation->title }}</h1>
@@ -21,6 +23,12 @@
                         </option>
                     @endforeach
                 </select>
+            </div>
+
+            <!-- Presentation Photo URL -->
+            <div class="form-group">
+                <label for="photo">Photo URL</label>
+                <input type="url" name="photo" class="form-control" placeholder="Enter photo URL" value="{{ old('photo') }}">
             </div>
 
             <!-- Start Time -->

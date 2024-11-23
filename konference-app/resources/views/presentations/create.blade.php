@@ -1,5 +1,8 @@
 @extends('layouts.layout')
 
+
+@section('title', 'Add Presentation')
+
 @section('content')
     <div class="container">
         <h1>Add New Presentation</h1>
@@ -29,6 +32,11 @@
             <div class="form-group">
                 <label for="description">Description</label>
                 <textarea name="description" class="form-control" placeholder="Enter description (optional)">{{ old('description') }}</textarea>
+            </div>
+            <!-- Presentation Photo URL -->
+            <div class="form-group">
+                <label for="photo">Photo URL</label>
+                <input type="url" name="photo" class="form-control" placeholder="Enter photo URL" value="{{ old('photo') }}">
             </div>
             <button type="submit" class="btn btn-primary">Submit Presentation</button>
         </form>
