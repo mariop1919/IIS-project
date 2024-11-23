@@ -49,5 +49,6 @@ class UserSeeder extends Seeder
             'is_activated' => false,
         ]);
 
+        User::factory()->count(20)->create();
     }
 }

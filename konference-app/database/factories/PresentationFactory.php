@@ -29,7 +29,7 @@ class PresentationFactory extends Factory
             'conference_id' => Conference::factory(),
             'room_id' => Room::factory(),
             'user_id' => $this->getExistingRecordId(User::class),
-            'status' => 'pending',
+            'status' => $this->faker->boolean ? 'approved' : 'pending',
         ];
     }
 

@@ -22,6 +22,6 @@ class RoomSeeder extends Seeder
             'equipment' => 'Whiteboard, Laptop',
         ]);
         
-        // Room::factory()->count(4)->create();
+        Room::factory()->count(10)->create();
     }
 }

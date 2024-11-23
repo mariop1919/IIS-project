@@ -27,6 +27,6 @@ class ConferenceRoomSeeder extends Seeder
             'end_time' => '2024-11-01 11:00:00', 
         ]);
         
-        // ConferenceRoom::factory()->usingExistingConferenceAndRoom()->count(4)->create();
+        ConferenceRoom::factory()->usingExistingConferenceAndRoom()->count(4)->create();
     }
 }

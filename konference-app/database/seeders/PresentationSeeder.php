@@ -83,6 +83,6 @@ class PresentationSeeder extends Seeder
         ]);
         
         
-        // Presentation::factory()->usingExistingConferenceAndRoom()->count(4)->create();
+        Presentation::factory()->usingExistingConferenceAndRoom()->count(200)->create();
     }
 }

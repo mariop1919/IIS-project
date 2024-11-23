@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Reservation;
 use Illuminate\Database\Seeder;
+use App\Models\Reservation;
+use Exception;
 
 class ReservationSeeder extends Seeder
 {
@@ -33,17 +34,9 @@ class ReservationSeeder extends Seeder
             'name' => 'Kira Morton',
             'email' => 'kiramorton@example.com',
             'phone' => '987-654-321',
-            'conference_id' => 2, 
+            'conference_id' => 2,
             'is_paid' => true,
-            'user_id' => 2, 
-        ]);
-        Reservation::factory()->create([
-            'name' => 'Rehan Oneill',
-            'email' => 'rehanoneill@example.com',
-            'phone' => '987-654-321',
-            'conference_id' => 2, 
-            'is_paid' => true,
-            'user_id' => 3, 
+            'user_id' => 3,
         ]);
         Reservation::factory()->create([
             'name' => 'Rehan Oneill',
@@ -61,17 +54,19 @@ class ReservationSeeder extends Seeder
             'is_paid' => true,
             'user_id' => 1, 
         ]);
-        Reservation::factory()->create([
-            'name' => 'admin',
-            'email' => 'admin@example.com',
-            'phone' => '987-654-321',
-            'conference_id' => 2, 
-            'is_paid' => true,
-            'user_id' => 1, 
-        ]);
+
+        $this->createReservationsWithCapacityCheck(200);
+    }
 
 
-        
-        // Reservation::factory()->usingExistingUserAndConference()->count(4)->create();
+    private function createReservationsWithCapacityCheck(int $count): void
+    {
+        for ($i = 0; $i < $count; $i++) {
+            try {
+                Reservation::factory()->usingExistingUserAndConference()->create();
+            } catch (Exception $e) {
+                break;
+            }
+        }
     }
 }

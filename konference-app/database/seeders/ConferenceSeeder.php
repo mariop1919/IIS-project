@@ -44,6 +44,6 @@ class ConferenceSeeder extends Seeder
             'user_id' => 3, 
         ]);
         
-        // Conference::factory()->usingExistingUser()->count(4)->create();
+        Conference::factory()->usingExistingUser()->count(4)->create();
     }
 }
