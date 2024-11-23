@@ -30,6 +30,7 @@ class RegisterController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'guest',
+            'is_active' => 1,
         ]);
 
         // Log the user in
