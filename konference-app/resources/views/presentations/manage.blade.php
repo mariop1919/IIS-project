@@ -3,11 +3,6 @@
 @section('content')
 <div class="container-fluid">
     <h1>Manage Presentations for {{ $conference->name }}</h1>
-    @if(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-    @endif
     <!-- List of presentations -->
     <table class="table table-bordered" style="width: 100%; table-layout: fixed;">
         <thead>
@@ -30,7 +25,7 @@
                     @if($presentation->status == 'approved')
                         <div class="form-control" disabled>{{ $presentation->room->name ?? 'N/A' }}</div>
                     @else
-                        <form action="{{ route('presentations.approve', $presentation->id) }}" method="POST">
+                    <form action="{{ route('presentations.approve', ['conference' => $conference->id, 'presentation' => $presentation->id]) }}" method="POST">
                             @csrf
                             <select name="room_id" class="form-control" required>
                                 <option value="" disabled selected>Select a room</option>
@@ -63,13 +58,13 @@
                     @if($presentation->status == 'pending')
                         <button type="submit" class="btn btn-success">Approve</button>
                         </form>
-                        <form action="{{ route('presentations.destroy', $presentation->id) }}" method="POST" style="display: inline;">
+                        <form action="{{ route('presentations.destroy', ['conference' => $conference->id, 'id' => $presentation->id]) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to reject this presentation? It will be deleted from the database.')">Reject</button>
                         </form>
                     @else
-                        <a href="{{ route('presentations.edit', $presentation->id) }}" class="btn btn-warning">Edit</a>
+                        <a href="{{ route('presentations.edit', ['conference' => $conference->id, 'presentation' => $presentation->id]) }}" class="btn btn-warning">Edit</a>
                     @endif
                 </td>
             </tr>
@@ -77,6 +72,6 @@
         </tbody>
     </table>
 
-    <a href="{{ route('conferences.show', $conference->id) }}" class="btn btn-primary">Back to Conference</a>
+    <a href="{{ route('conferences.index') }}" class="btn btn-primary">Back to Conferences</a>
 </div>
 @endsection

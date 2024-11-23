@@ -112,12 +112,13 @@ class ReservationController extends Controller
         return view('reservations.manage', compact('conference', 'reservations'));
     }
 
-    public function confirm($reservation_id)
+    public function confirm($conference_id, $reservation_id)
     {
         $reservation = Reservation::findOrFail($reservation_id);
         $reservation->is_paid = true;
         $reservation->save();
-        return redirect()->route('reservations.manage', $reservation->conference_id)
+
+        return redirect()->route('reservations.manage', $conference_id)
             ->with('success', 'Reservation confirmed successfully!');
     }
 

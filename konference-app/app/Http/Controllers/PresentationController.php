@@ -42,8 +42,9 @@ class PresentationController extends Controller
             ->with('success', 'Your presentation has been submitted for approval!');
     }
 
+
         // Manage presentations for the conference
-        public function manage($conference_id)
+    public function manage($conference_id)
         {
             // Fetch the conference
             $conference = Conference::with('rooms')->findOrFail($conference_id);
@@ -61,9 +62,10 @@ class PresentationController extends Controller
 
             return view('presentations.manage', compact('conference', 'presentations'));
         }
-
+        
+    
         // Approve and assign room to a presentation
-        public function approve(Request $request, $presentationId)
+        public function approve(Request $request, $conference_id, $presentationId)
     {
         $presentation = Presentation::findOrFail($presentationId);
         $conference = $presentation->conference;
@@ -92,8 +94,12 @@ class PresentationController extends Controller
                     });
             })
             ->exists();
+        $startTime = Carbon::parse($validated['start_time']);
+        $endTime = Carbon::parse($validated['end_time']);
+        $conferenceStartTime = Carbon::parse($conference->start_time);
+        $conferenceEndTime = Carbon::parse($conference->end_time);
         $conferenceTimeCheck = $startTime < $conference->start_time || $endTime > $conference->end_time;
-
+        //dd($startTime, $conferenceStartTime, $endTime, $conferenceEndTime, $conferenceTimeCheck);
         // If there's a conflict in presentation time or the time is outside the conference range, show error
         if ($conferenceTimeCheck) {
             return redirect()->back()->with('error', 'Presentation time must be within the conference schedule.');
@@ -119,7 +125,7 @@ class PresentationController extends Controller
 
         return redirect()->back()->with('success', 'Presentation approved successfully.');
     }
-    public function edit($id)
+    public function edit($conference_id,$id)
     {
         $presentation = Presentation::findOrFail($id);
         $conference = $presentation->conference; // Fetch the associated conference
@@ -128,7 +134,7 @@ class PresentationController extends Controller
         return view('presentations.edit', compact('presentation', 'conference', 'rooms'));
     }
 
-public function update(Request $request, $id)
+public function update(Request $request,$conference_id, $id)
 {
     $presentation = Presentation::findOrFail($id);
     $conference = $presentation->conference;
@@ -157,6 +163,11 @@ public function update(Request $request, $id)
                   });
         })
         ->exists(); 
+    $startTime = Carbon::parse($validated['start_time']);
+    $endTime = Carbon::parse($validated['end_time']);
+    $conferenceStartTime = Carbon::parse($conference->start_time);
+    $conferenceEndTime = Carbon::parse($conference->end_time);
+    $conferenceTimeCheck = $startTime < $conference->start_time || $endTime > $conference->end_time;
     
     $conferenceTimeCheck = $startTime < $conference->start_time || $endTime > $conference->end_time;
 
@@ -199,7 +210,7 @@ public function update(Request $request, $id)
             'formattedEndOfWeek' => $endOfWeek->format('F j, Y'),
             ]);
     }
-        public function destroy($id)
+        public function destroy($conference_id,$id)
     {
         $presentation = Presentation::findOrFail($id);
         $presentation->delete();

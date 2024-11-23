@@ -4,14 +4,8 @@
     <div class="container">
         <h1>Edit Presentation: {{ $presentation->title }}</h1>
 
-        <!-- Error message for validation errors -->
-        @if(session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
         <!-- Form for editing presentation -->
-        <form action="{{ route('presentations.update', $presentation->id) }}" method="POST">
+        <form action="{{ route('presentations.update', ['conference' => $presentation->conference_id , 'presentation' => $presentation->id]) }}" method="POST">
             @csrf
             @method('PUT')
 
