@@ -38,13 +38,13 @@
         <!-- Start Time -->
         <div class="form-group">
             <label for="start_time">Start Time <span class="text-danger">*</span></label>
-            <input type="datetime-local" id="start_time" name="start_time" class="form-control" value="{{ old('start_time', now()->format('Y-m-d\TH:i')) }}" required>
+            <input type="datetime-local" id="start_time" name="start_time" class="form-control" value="{{ old('start_time', now()->addHours(2)->format('Y-m-d\TH:i')) }}" required>
         </div>
     
         <!-- End Time -->
         <div class="form-group">
             <label for="end_time">End Time <span class="text-danger">*</span></label>
-            <input type="datetime-local" id="end_time" name="end_time" class="form-control" value="{{ old('end_time', now()->addHours(6)->format('Y-m-d\TH:i')) }}" required>
+            <input type="datetime-local" id="end_time" name="end_time" class="form-control" value="{{ old('end_time', now()->addHours(8)->format('Y-m-d\TH:i')) }}" required>
         </div>
     
         <!-- Submit Button -->
