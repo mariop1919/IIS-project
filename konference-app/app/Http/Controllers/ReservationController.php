@@ -122,13 +122,15 @@ class ReservationController extends Controller
             ->with('success', 'Reservation confirmed successfully!');
     }
 
-    public function cancel($reservation_id)
+    public function cancel($conference_id, $reservation_id)
     {
         $reservation = Reservation::findOrFail($reservation_id);
         if (!$reservation->is_paid) {
             $reservation->delete();
+            
             return redirect()->route('reservations.manage', $reservation->conference_id)
                 ->with('success', 'Reservation canceled successfully!');
         }
+       
     }
 }
