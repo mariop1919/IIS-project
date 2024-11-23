@@ -239,6 +239,7 @@ public function update(Request $request,$conference_id, $id)
 
         // Fetch presentations for those conferences within the specified week
         $presentations = Presentation::whereIn('conference_id', $conferenceIds)
+            ->where('status', 'approved')
             ->whereBetween('start_time', [$startOfWeek, $endOfWeek])
             ->with(['room', 'user'])
             ->orderBy('start_time')
