@@ -13,13 +13,13 @@
         <a class="navbar-brand" href="{{ route('home') }}">Conference System</a>
         
         <!-- Show "My Reservations" and "Timetable" buttons for authenticated users -->
+        <a href="{{ route('reservations.index') }}" class="btn btn-secondary ml-2">My Reservations</a>
         @auth
-            <a href="{{ route('reservations.index') }}" class="btn btn-secondary ml-2">My Reservations</a>
             <a href="{{ route('presentations.timetable') }}" class="btn btn-secondary ml-2">My Presentations Schedule</a>
             <a href="{{ route('presentations.attendeeSchedule') }}" class="btn btn-secondary ml-2">Attendee Schedule</a>
             <a href="{{ route('presentations.personalSchedule') }}" class="btn btn-secondary ml-2">My Personal Schedule</a>
             <a href="{{ route('presentations.leaderboard') }}" class="btn btn-secondary ml-2">Best presentation</a>
-            @endauth
+        @endauth
         
         <div class="collapse navbar-collapse justify-content-end">
             <ul class="navbar-nav ml-auto">
