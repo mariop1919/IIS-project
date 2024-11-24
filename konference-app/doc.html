@@ -56,6 +56,17 @@
 <h2>Implementace</h2>
 <p>Stručná dokumentace k implementaci, která popisuje, které části projektu (např. PHP skripty) implementují jednotlivé případy použití.</p>
 
+<ul>
+  <li><strong>AdminController.php:</strong>Spravuje, pridáva, úpravuje, deaktivuje, aktivuje a maže používateľov.</li>
+  <li><strong>ConferenceController.php:</strong>Spravuje konferencie, zobrazuje zoznam konferencií, detailov konferencie, vytvorenia, úpravy a mazania konferencií.</li>
+  <li><strong>LoginController.php:</strong>Zobrazuje prihlasovací formulár a spracováva prihlásenie a odhlásenie používateľa.</li>
+  <li><strong>PresentationController.php:</strong>Spravuje, vytvára, úpravuje, maže a schvaľuje prezentácie, pridáva otázky k prezentácii, pridáva prezentácie do osobného/navštevníckeho/konferenčného rozvrhu, odstraňuje prezentácie z osobného/navštevníckeho/konferenčného rozvrhu, zobrazuje osobný/navštevnícky/konferenčný rozvrh a zobrazuje rebríček prezentácií.</li>
+  <li><strong>RegisterController.php:</strong>Zobrazuje registračný formulár a spracúva registráciu nového používateľa.</li>
+  <li><strong>ReservationController.php:</strong>Zobrazuje, spravuje, vytvára, potvrdzuje a ruší rezervácie.</li>
+  <li><strong>RoomController.php:</strong>Spravuje miestnosti a pridáva miestnosti ku konkrétnej konferencii.</li>
+  <li><strong>VoteController.php:</strong>Pridáva hlas pre najlepšiu prezentáciu a ruší ho.</li>
+</ul>
+
 <h3>Databáze</h3>
 
 <div>
@@ -68,7 +79,31 @@ Stručně popište:
 <ul>
 <li>postup instalace na server,</li>
 <li>softwarové požadavky (verze PHP apod.),</li>
+<ul>
+  <li>PHP verzia 8.0 alebo vyššia</li>
+  <li>Composer</li>
+  <li>NPM</li>
+  <li>Webový server eva</li>
+  <li>Databázový server MySQL</li>
+</ul>
 <li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
+<ol>
+  <li>Konfigurácia .env súboru</li>
+  <pre><code>
+  DB_CONNECTION=mysql
+  DB_HOST=127.0.0.1
+  DB_PORT=3306
+  DB_DATABASE=nazov_db
+  DB_USERNAME=uzivatel
+  DB_PASSWORD=heslo
+  </code></pre>
+  <li>Spustenie migrácie:</li>
+  <pre><code>php artisan migrate</code></pre>
+  <li>Naplnenie DB:</li>
+  <pre><code>php artisan db:seed</code></pre>
+  <li>Spustenie serveru:</li>
+  <pre><code>php artisan serve</code></pre>
+</ol>
 </ul>
 
 <h2>Známé problémy</h2>
