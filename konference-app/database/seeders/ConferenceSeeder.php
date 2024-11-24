@@ -37,7 +37,7 @@ class ConferenceSeeder extends Seeder
             'name' => 'Example Conference',
             'description' => 'Conference about Example',
             'location' => 'Bratislava',
-            'capacity' => 0,
+            'capacity' => 1,
             'price' => 50.00,
             'start_time' => '2024-11-27 14:00:00',
             'end_time' => '2024-11-29 18:30:00',
