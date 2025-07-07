@@ -33,7 +33,7 @@ A web application for managing conferences. It supports user registration, sessi
 - **Questions & Voting**: Ask questions during sessions, vote for best presentation
 - **Personal Schedule**: Attendee-specific session planner
 
-- ### Requirements
+### Requirements
 
 - PHP 8.2+
 - Composer
